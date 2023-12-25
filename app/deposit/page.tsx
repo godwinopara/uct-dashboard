@@ -5,10 +5,11 @@ import Modal from "@/components/modal/Modal";
 import { useUserContext } from "@/hooks/useUserContext";
 import { FormData } from "@/types/formdata";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaInfoCircle, FaTimes } from "react-icons/fa";
 
 export default function Deposit() {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const [notificationModalIsOpen, setNotificationModalIsOpen] = useState(false);
 	const [formData, setFormData] = useState<FormData>({
 		paymentMethod: "",
 		amount: "",
@@ -37,6 +38,10 @@ export default function Deposit() {
 		setModalIsOpen(false);
 	};
 
+	const closeNotificationModal = () => {
+		setNotificationModalIsOpen(false);
+	};
+
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const payload = {
@@ -47,9 +52,29 @@ export default function Deposit() {
 		};
 		updateDepositHistory(payload);
 		closeModal();
+		setNotificationModalIsOpen(true);
 	};
 	return (
 		<div>
+			<Modal modalIsOpen={notificationModalIsOpen}>
+				<div className="mt-14 md:mt-0 flex items-center justify-between mb-5 overflow-auto">
+					<h3 className="text-xl font-bold">Transaction Notification</h3>
+					<button
+						className="dark:text-white text-xl border border-black"
+						onClick={closeNotificationModal}
+					>
+						<FaTimes />
+					</button>
+				</div>
+				<div className="flex items-center gap-x-5">
+					<div className="text-3xl text-meta-3">
+						<FaInfoCircle />
+					</div>
+					<p className="text-meta-3 text-lg">
+						You Deposit has been received. You will receive a confirmation via email!
+					</p>
+				</div>
+			</Modal>
 			<Modal modalIsOpen={modalIsOpen}>
 				<div className="mt-14 md:mt-0 flex items-center justify-between mb-5 overflow-auto">
 					<h3 className="text-xl font-bold">Submit Notification for Deposit</h3>
@@ -68,6 +93,7 @@ export default function Deposit() {
 						<select
 							name="paymentMethod"
 							value={formData.paymentMethod}
+							required
 							onChange={handleInputChange}
 							className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-meta-3 active:border-meta-3 dark:border-form-strokedark dark:bg-form-input dark:focus:border-meta-3"
 						>
@@ -82,6 +108,7 @@ export default function Deposit() {
 							type="text"
 							placeholder="5000"
 							name="amount"
+							required
 							value={formData.amount}
 							onChange={handleInputChange}
 							className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-meta-3 active:border-meta-3 disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-meta-3"
@@ -92,6 +119,7 @@ export default function Deposit() {
 						<input
 							type="file"
 							name="paymentReceipt"
+							required
 							onChange={handleFileChange}
 							className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-meta-3 file:hover:bg-opacity-10 focus:border-meta-3 active:border-meta-3 disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-meta-3"
 						/>

@@ -2,11 +2,15 @@
 
 import CardDataStats from "@/components/CardDataStats";
 import WithdrawalTable from "@/components/Tables/WithdrawalTable";
+import Modal from "@/components/modal/Modal";
 import { useAppContext } from "@/hooks/useAppContext";
 import { useUserContext } from "@/hooks/useUserContext";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { FaInfoCircle, FaTimes } from "react-icons/fa";
 
 export default function Withdrawal() {
+	const [modalIsOpen, setModalIsOpen] = useState(false);
+
 	const { state } = useAppContext();
 	const { userDataState, updateWithdrawalHistory } = useUserContext();
 
@@ -36,14 +40,40 @@ export default function Withdrawal() {
 			date: new Date().toDateString(),
 		};
 
-		console.log(payload, "===========");
 		updateWithdrawalHistory(payload);
+		setModalIsOpen(true);
+		setFormData({
+			paymentMethod: "",
+			amount: "",
+			walletAddress: "",
+			bankName: "",
+			accountName: "",
+			accountNumber: "",
+		});
 	};
 
-	//  You withdrawal request has been received. You will receive a confirmation via email!
+	const closeModal = () => {
+		setModalIsOpen(false);
+	};
 
 	return (
 		<>
+			<Modal modalIsOpen={modalIsOpen}>
+				<div className="mt-14 md:mt-0 flex items-center justify-between mb-5 overflow-auto">
+					<h3 className="text-xl font-bold">Transaction Notification</h3>
+					<button className="dark:text-white text-xl border border-black" onClick={closeModal}>
+						<FaTimes />
+					</button>
+				</div>
+				<div className="flex items-center gap-x-5">
+					<div className="text-3xl text-meta-3">
+						<FaInfoCircle />
+					</div>
+					<p className="text-meta-3 text-lg">
+						You withdrawal request has been received. You will receive a confirmation via email!
+					</p>
+				</div>
+			</Modal>
 			<div className="grid xl:grid-cols-3 gap-y-8 xl:gap-y-0 xl:gap-x-10 mb-16">
 				<CardDataStats title="Total Balance in Dollars" totalUsd={userDataState.totalBalance} />
 				<CardDataStats
@@ -55,7 +85,7 @@ export default function Withdrawal() {
 					totalEth={(userDataState.totalBalance / state.ethereumRate).toFixed(8)}
 				/>
 			</div>
-			<div className="mb-20   rounded-sm mx-6.5 xl:w-1/2 p-6  bg-white shadow-default  dark:bg-transparent">
+			<div className="mb-20 rounded-sm  xl:w-1/2 p-6  bg-white shadow-default  dark:bg-transparent">
 				<div className="border-b border-stroke py-4 dark:border-strokedark">
 					<h3 className="font-medium text-black dark:text-white">Withdrawal Transaction</h3>
 				</div>
@@ -81,13 +111,13 @@ export default function Withdrawal() {
 
 						<div className="mb-5">
 							<label className="mb-3 block text-black dark:text-white">Select Payment Method</label>
-							<div className="relative z-20 bg-white dark:bg-form-input mb-3">
+							<div className="bg-white dark:bg-form-input mb-3">
 								<select
 									value={formData.paymentMethod}
 									name="paymentMethod"
 									onChange={handleInputChange}
 									required
-									className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-meta-3 active:border-meta-3 dark:border-form-strokedark dark:bg-form-input"
+									className="z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-meta-3 active:border-meta-3 dark:border-form-strokedark dark:bg-form-input"
 								>
 									<option value="">Select Payment Method</option>
 									<option value="Bitcoin">Bitcoin</option>
