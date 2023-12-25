@@ -1,24 +1,8 @@
 import { useUserContext } from "@/hooks/useUserContext";
 import { Deposit } from "@/types/deposit";
 
-const DepositData: Deposit[] = [
-	{
-		method: "Bitcoin",
-		amount: 10,
-		status: "Completed",
-		date: new Date().toDateString(),
-	},
-	{
-		method: "Bitcoin",
-		amount: 10,
-		status: "Pending",
-		date: new Date().toDateString(),
-	},
-];
-
 export default function WithdrawalTable() {
 	const { userDataState } = useUserContext();
-	console.log(userDataState);
 
 	return (
 		<>

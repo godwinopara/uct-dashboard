@@ -3,17 +3,7 @@ import { useAppContext } from "@/hooks/useAppContext";
 import { useUserContext } from "@/hooks/useUserContext";
 
 const TableThree = () => {
-	const { state } = useAppContext();
-
-	// const { userStateData } = useUserContext();
-	const userDataState = {
-		totalBalance: 10000,
-		totalProfit: 5000,
-		totalBonus: 800,
-		tradingSession: [],
-		firstname: "Franklin",
-		lastname: "Doge",
-	};
+	const { userDataState } = useUserContext();
 
 	return (
 		<>
