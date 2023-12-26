@@ -17,7 +17,7 @@ interface SidebarProps {
 	setSidebarOpen: (arg: boolean) => void;
 }
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 	const pathname = usePathname();
 
 	const trigger = useRef<any>(null);
@@ -68,7 +68,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 		>
 			{/* <!-- SIDEBAR HEADER --> */}
 			<div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-				<Link href="/user">
+				<Link href="/admin">
 					<Image src={logo} alt="Logo" />
 				</Link>
 
@@ -107,10 +107,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 							{/* <!-- Menu Item Dashboard --> */}
 							<li>
 								<Link
-									href="/"
+									href="/admin"
 									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-										(pathname === "/user" || pathname.includes("dashboard")) &&
-										"bg-graydark dark:bg-meta-4"
+										pathname === "/admin" && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
 									<FaHome />
@@ -123,29 +122,44 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
 							<li>
 								<Link
-									href="/user/assets"
+									href="/admin/users"
 									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-										pathname.includes("assets") && "bg-graydark dark:bg-meta-4"
+										pathname.includes("/admin/users") && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
 									<FaCompactDisc />
-									Assets
+									Manage Users
 								</Link>
 							</li>
 
 							{/* ----- Assets Items Dashboard ------  */}
 
+							{/* ----- Account Items Dashboard ------  */}
+
+							<li>
+								<Link
+									href="/admin/accounts"
+									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+										pathname.includes("/admin/accounts") && "bg-graydark dark:bg-meta-4"
+									}`}
+								>
+									<FaMoneyBillAlt />
+									Accounts
+								</Link>
+							</li>
+							{/* ----- Account Items Dashboard ------  */}
+
 							{/* ----- Deposit Items Dashboard ------  */}
 
 							<li>
 								<Link
-									href="/user/deposit"
+									href="/admin/deposit"
 									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-										pathname.includes("deposit") && "bg-graydark dark:bg-meta-4"
+										pathname.includes("/admin/deposits") && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
 									<FaMoneyBillAlt />
-									Deposit
+									Deposits
 								</Link>
 							</li>
 							{/* ----- Deposit Items Dashboard ------  */}
@@ -153,13 +167,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 							{/* ----- Withdrawal Items Dashboard ------  */}
 							<li>
 								<Link
-									href="/user/withdrawal"
+									href="/withdrawal"
 									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
 										pathname.includes("withdrawal") && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
 									<FaMoneyCheckAlt />
-									Withdrawal
+									Trade Sessions
 								</Link>
 							</li>
 
@@ -167,25 +181,47 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
 							<li>
 								<Link
-									href="/user/subscription"
+									href="/admin/subscriptions"
 									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
 										pathname.includes("subscription") && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
 									<FaServer />
-									Subscription
+									Subscriptions
 								</Link>
 							</li>
 
 							<li>
 								<Link
-									href="/user/verify"
+									href="/admin/verification"
 									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-										pathname.includes("verify") && "bg-graydark dark:bg-meta-4"
+										pathname.includes("/admin/verification") && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
 									<FaCheckCircle />
-									Verify Account
+									Identity Verification
+								</Link>
+							</li>
+							<li>
+								<Link
+									href="/admin/notification"
+									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+										pathname.includes("/admin/notification") && "bg-graydark dark:bg-meta-4"
+									}`}
+								>
+									<FaCheckCircle />
+									Notification
+								</Link>
+							</li>
+							<li>
+								<Link
+									href="/admin/updatetraders"
+									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+										pathname.includes("/admin/updatetraders") && "bg-graydark dark:bg-meta-4"
+									}`}
+								>
+									<FaCheckCircle />
+									Update Traders
 								</Link>
 							</li>
 						</ul>
@@ -197,4 +233,4 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 	);
 };
 
-export default Sidebar;
+export default AdminSidebar;

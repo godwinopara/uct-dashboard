@@ -29,36 +29,42 @@ const DepositTable = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{userDataState.depositHistory.map((depositItem: Deposit, key: number) => (
-									<tr key={key}>
-										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<h5 className="text-black  dark:text-white">{depositItem.method}</h5>
-										</td>
-										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<h5 className="font-medium text-black dark:text-white">
-												${depositItem.amount}
-											</h5>
-										</td>
-										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p
-												className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-													depositItem.status === "Completed"
-														? "text-success bg-success"
-														: depositItem.status === "UnCompleted"
-														? "text-danger bg-danger"
-														: "text-warning bg-warning"
-												}`}
-											>
-												{depositItem.status}
-											</p>
-										</td>
-										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<h5 className="font-medium text-black dark:text-white">{depositItem.date}</h5>
-										</td>
-									</tr>
-								))}
+								{userDataState.depositHistory.length > 0 &&
+									userDataState.depositHistory.map((depositItem: Deposit, key: number) => (
+										<tr key={key}>
+											<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+												<h5 className="text-black  dark:text-white">{depositItem.method}</h5>
+											</td>
+											<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+												<h5 className="font-medium text-black dark:text-white">
+													${depositItem.amount}
+												</h5>
+											</td>
+											<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+												<p
+													className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
+														depositItem.status === "Completed"
+															? "text-success bg-success"
+															: depositItem.status === "UnCompleted"
+															? "text-danger bg-danger"
+															: "text-warning bg-warning"
+													}`}
+												>
+													{depositItem.status}
+												</p>
+											</td>
+											<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+												<h5 className="font-medium text-black dark:text-white">
+													{depositItem.date}
+												</h5>
+											</td>
+										</tr>
+									))}
 							</tbody>
 						</table>
+						{userDataState.depositHistory.length < 1 && (
+							<p className="text-center mt-5 py-4 text-xl">No Recent Deposit</p>
+						)}
 					</div>
 				</div>
 			)}

@@ -3,17 +3,12 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
 
-const userAuthState = {
-	firstname: "Franklin",
-	lastname: "Doge",
-};
-
 export const AuthProvider = ({ children }) => {
-	const [user, setUser] = useState(userAuthState);
+	const [user, setUser] = useState(null);
 
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged((authUser) => {
-			setUser(authUser);
+			authUser ? setUser(authUser) : setUser(null);
 		});
 
 		return () => unsubscribe();

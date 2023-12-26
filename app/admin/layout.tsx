@@ -1,15 +1,15 @@
 "use client";
 
-import "./globals.css";
-import "./data-tables-css.css";
-import "./satoshi.css";
+import "../globals.css";
+import "../data-tables-css.css";
+import "../satoshi.css";
 import { useState, useEffect } from "react";
-import Loader from "@/components/common/Loader";
 
-import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import { AppProvider } from "@/context/AppContext";
 import { UserProvider } from "@/context/UserContext";
+import AdminSidebar from "@/components/AdminSidebar";
+import Loader from "@/components/common/Loader";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							) : (
 								<div className="flex h-screen overflow-hidden">
 									{/* <!-- ===== Sidebar Start ===== --> */}
-									<Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+									<AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 									{/* <!-- ===== Sidebar End ===== --> */}
 
 									{/* <!-- ===== Content Area Start ===== --> */}
