@@ -1,8 +1,9 @@
 "use client";
 
-import { createContext, useContext, useEffect, useReducer, useState } from "react";
-// import { useAuth } from "./AuthContext";
-// import { database } from "../lib/firebase";
+import { createContext, useContext, useEffect, useLayoutEffect, useReducer, useState } from "react";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { db } from "@/config/firebase";
+import { useRouter } from "next/navigation";
 
 const defaultState = {
 	totalBalance: 10000,
@@ -15,7 +16,9 @@ const defaultState = {
 		firstname: "Franklin",
 		lastname: "Doge",
 		email: "frank@gmail.com",
+		password: "",
 		country: "usa",
+		mobile: "",
 	},
 };
 
@@ -39,6 +42,11 @@ const userReducer = (state, action) => {
 				...state,
 				withdrawalHistory: [...state.withdrawalHistory, action.payload],
 			};
+		case "UPDATE_USER":
+			return {
+				...state,
+				user: { ...state.user, ...action.payload },
+			};
 
 		// Add more cases as needed for other state updates
 
@@ -49,7 +57,6 @@ const userReducer = (state, action) => {
 
 export const UserProvider = ({ children }) => {
 	const isLocalStorageAvailable = typeof window !== "undefined" && window.localStorage;
-	// const { user } = useAuth();
 	const storedState = isLocalStorageAvailable ? localStorage.getItem("userDataState") : null;
 	const initialState = storedState ? JSON.parse(storedState) : defaultState;
 	const [userDataState, dispatch] = useReducer(userReducer, initialState);
@@ -57,23 +64,6 @@ export const UserProvider = ({ children }) => {
 	useEffect(() => {
 		localStorage.setItem("userDataState", JSON.stringify(userDataState));
 	}, [userDataState]);
-
-	// useEffect(() => {
-	// 	const fetchUserData = () => {
-	// 		if (user) {
-	// 			const userRef = database.ref(`/users/${user.uid}`);
-
-	// 			userRef.on("value", (snapshot) => {
-	// 				const data = snapshot.val();
-	// 				setUserData(data);
-	// 			});
-
-	// 			return () => userRef.off("value");
-	// 		}
-	// 	};
-
-	// 	fetchUserData();
-	// }, [user]);
 
 	const updateTradingSession = (payload) => {
 		dispatch({ type: "UPDATE_TRADING_SESSION", payload });
@@ -87,16 +77,19 @@ export const UserProvider = ({ children }) => {
 		dispatch({ type: "UPDATE_WITHDRAWAL_HISTORY", payload });
 	};
 
-	// const updateUserData = (newData) => {
-	// 	if (user) {
-	// 		const userRef = database.ref(`/users/${user.uid}`);
-	// 		userRef.update(newData);
-	// 	}
-	// };
+	const updateUser = (payload) => {
+		dispatch({ type: "UPDATE_USER", payload });
+	};
 
 	return (
 		<UserContext.Provider
-			value={{ userDataState, updateTradingSession, updateDepositHistory, updateWithdrawalHistory }}
+			value={{
+				userDataState,
+				updateUser,
+				updateTradingSession,
+				updateDepositHistory,
+				updateWithdrawalHistory,
+			}}
 		>
 			{children}
 		</UserContext.Provider>
