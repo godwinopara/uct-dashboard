@@ -11,6 +11,8 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 
 import { useUserContext } from "@/hooks/useUserContext";
 import { useRouter } from "next/navigation";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "@/config/firebase";
 
 interface Country {
 	name: string;
@@ -32,7 +34,7 @@ export default function Signup() {
 	});
 
 	const { signUp } = useAuthContext();
-	const { updateUser } = useUserContext();
+	const { updateUser, saveNewUserData } = useUserContext();
 
 	const router = useRouter();
 
@@ -47,7 +49,7 @@ export default function Signup() {
 	const handleSubmitSignUp = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const payload = {
+		const newUserData = {
 			firstname: formData.firstname,
 			lastname: formData.lastname,
 			email: formData.email,
@@ -64,7 +66,23 @@ export default function Signup() {
 		try {
 			const signup = await signUp(formData.email, formData.password).then();
 			if (signup) {
-				updateUser(payload);
+				const userRef = collection(db, "userData");
+				await setDoc(doc(userRef, signup.user.uid), {
+					totalBalance: "0.000",
+					totalProfit: "0.000",
+					totalBonus: "0.000",
+					tradingSession: [],
+					depositHistory: [],
+					withdrawalHistory: [],
+					user: {
+						firstname: formData.firstname[0].toUpperCase() + formData.firstname.slice(1),
+						lastname: formData.lastname[0].toUpperCase() + formData.lastname.slice(1),
+						email: formData.email,
+						password: formData.password,
+						country: formData.country,
+						mobile: formData.mobile,
+					},
+				});
 				setError(null);
 				setFormData({
 					firstname: "",

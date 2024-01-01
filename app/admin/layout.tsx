@@ -3,17 +3,16 @@
 import "../globals.css";
 import "../data-tables-css.css";
 import "../satoshi.css";
+import "rodal/lib/rodal.css";
 import { useState, useEffect } from "react";
-
-import Header from "@/components/Header";
 import { AppProvider } from "@/context/AppContext";
-import { UserProvider } from "@/context/UserContext";
 import AdminSidebar from "@/components/AdminSidebar";
 import Loader from "@/components/common/Loader";
+import AdminHeader from "@/components/AdminHeader";
+import { AdminProvider } from "@/context/AdminContext";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
-
 	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -24,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang="en">
 			<body suppressHydrationWarning={true}>
 				<AppProvider>
-					<UserProvider>
+					<AdminProvider>
 						<div className="dark:bg-boxdark-2 dark:text-bodydark">
 							{loading ? (
 								<Loader />
@@ -37,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 									{/* <!-- ===== Content Area Start ===== --> */}
 									<div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
 										{/* <!-- ===== Header Start ===== --> */}
-										<Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+										<AdminHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 										{/* <!-- ===== Header End ===== --> */}
 
 										{/* <!-- ===== Main Content Start ===== --> */}
@@ -50,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								</div>
 							)}
 						</div>
-					</UserProvider>
+					</AdminProvider>
 				</AppProvider>
 			</body>
 		</html>

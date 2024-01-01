@@ -58,7 +58,7 @@ export default function AssetsTable() {
 
 								<td className="border-b border-[#eee]  dark:border-strokedark">
 									<Link
-										href="/deposit"
+										href="/user/deposit"
 										className="inline-flex items-center justify-center rounded-md border border-meta-3 py-2 px-6 text-center font-medium text-meta-3 hover:bg-opacity-90 lg:px-8 xl:px-10"
 									>
 										Deposit

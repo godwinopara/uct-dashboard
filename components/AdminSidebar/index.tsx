@@ -3,14 +3,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import logo from "public/images/logo/logo.svg";
-import {
-	FaCheckCircle,
-	FaCompactDisc,
-	FaHome,
-	FaMoneyBillAlt,
-	FaMoneyCheckAlt,
-	FaServer,
-} from "react-icons/fa";
+import { FaCheckCircle, FaHome, FaMoneyBillAlt, FaUsers } from "react-icons/fa";
+import { PiIdentificationBadge } from "react-icons/pi";
+import { MdOutlineUnsubscribe, MdAccountBalance } from "react-icons/md";
+import { TbChartCandle } from "react-icons/tb";
+import { BiMoneyWithdraw } from "react-icons/bi";
+import { IoIosNotifications } from "react-icons/io";
 
 interface SidebarProps {
 	sidebarOpen: boolean;
@@ -124,10 +122,10 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 								<Link
 									href="/admin/users"
 									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-										pathname.includes("/admin/users") && "bg-graydark dark:bg-meta-4"
+										pathname.includes("users") && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
-									<FaCompactDisc />
+									<FaUsers />
 									Manage Users
 								</Link>
 							</li>
@@ -140,10 +138,10 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 								<Link
 									href="/admin/accounts"
 									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-										pathname.includes("/admin/accounts") && "bg-graydark dark:bg-meta-4"
+										pathname.includes("accounts") && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
-									<FaMoneyBillAlt />
+									<MdAccountBalance />
 									Accounts
 								</Link>
 							</li>
@@ -155,11 +153,22 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 								<Link
 									href="/admin/deposit"
 									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-										pathname.includes("/admin/deposits") && "bg-graydark dark:bg-meta-4"
+										pathname.includes("deposit") && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
 									<FaMoneyBillAlt />
 									Deposits
+								</Link>
+							</li>
+							<li>
+								<Link
+									href="/admin/withdrawals"
+									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+										pathname.includes("withdrawals") && "bg-graydark dark:bg-meta-4"
+									}`}
+								>
+									<BiMoneyWithdraw />
+									Withdrawals
 								</Link>
 							</li>
 							{/* ----- Deposit Items Dashboard ------  */}
@@ -167,12 +176,12 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 							{/* ----- Withdrawal Items Dashboard ------  */}
 							<li>
 								<Link
-									href="/withdrawal"
+									href="/admin/trades"
 									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-										pathname.includes("withdrawal") && "bg-graydark dark:bg-meta-4"
+										pathname.includes("trades") && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
-									<FaMoneyCheckAlt />
+									<TbChartCandle />
 									Trade Sessions
 								</Link>
 							</li>
@@ -186,7 +195,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 										pathname.includes("subscription") && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
-									<FaServer />
+									<MdOutlineUnsubscribe />
 									Subscriptions
 								</Link>
 							</li>
@@ -195,10 +204,10 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 								<Link
 									href="/admin/verification"
 									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-										pathname.includes("/admin/verification") && "bg-graydark dark:bg-meta-4"
+										pathname.includes("verification") && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
-									<FaCheckCircle />
+									<PiIdentificationBadge />
 									Identity Verification
 								</Link>
 							</li>
@@ -209,19 +218,8 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 										pathname.includes("/admin/notification") && "bg-graydark dark:bg-meta-4"
 									}`}
 								>
-									<FaCheckCircle />
+									<IoIosNotifications />
 									Notification
-								</Link>
-							</li>
-							<li>
-								<Link
-									href="/admin/updatetraders"
-									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-										pathname.includes("/admin/updatetraders") && "bg-graydark dark:bg-meta-4"
-									}`}
-								>
-									<FaCheckCircle />
-									Update Traders
 								</Link>
 							</li>
 						</ul>

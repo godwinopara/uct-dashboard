@@ -1,26 +1,10 @@
 "use client";
 
-import { createContext, useContext, useEffect, useLayoutEffect, useReducer, useState } from "react";
+import { createContext, useContext, useEffect, useReducer, useState } from "react";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { db } from "@/config/firebase";
 import { useRouter } from "next/navigation";
-
-const defaultState = {
-	totalBalance: 10000,
-	totalProfit: 5000,
-	totalBonus: 800,
-	tradingSession: [],
-	depositHistory: [],
-	withdrawalHistory: [],
-	user: {
-		firstname: "Franklin",
-		lastname: "Doge",
-		email: "frank@gmail.com",
-		password: "",
-		country: "usa",
-		mobile: "",
-	},
-};
+import { collection, doc, setDoc, getDoc, getDocs } from "firebase/firestore";
 
 export const UserContext = createContext();
 
@@ -28,16 +12,19 @@ export const UserContext = createContext();
 const userReducer = (state, action) => {
 	switch (action.type) {
 		case "UPDATE_TRADING_SESSION":
+			saveToFirebase({ ...state, tradingSession: [...state.tradingSession, action.payload] });
 			return {
 				...state,
 				tradingSession: [...state.tradingSession, action.payload],
 			};
 		case "UPDATE_DEPOSIT_HISTORY":
+			saveToFirebase({ ...state, depositHistory: [...state.depositHistory, action.payload] });
 			return {
 				...state,
 				depositHistory: [...state.depositHistory, action.payload],
 			};
 		case "UPDATE_WITHDRAWAL_HISTORY":
+			saveToFirebase({ ...state, withdrawalHistory: [...state.withdrawalHistory, action.payload] });
 			return {
 				...state,
 				withdrawalHistory: [...state.withdrawalHistory, action.payload],
@@ -48,6 +35,8 @@ const userReducer = (state, action) => {
 				user: { ...state.user, ...action.payload },
 			};
 
+		case "UPDATE_STATE":
+			return action.payload;
 		// Add more cases as needed for other state updates
 
 		default:
@@ -55,15 +44,34 @@ const userReducer = (state, action) => {
 	}
 };
 
+async function saveToFirebase(data) {
+	const { user } = useAuthContext();
+	if (user) {
+		const userRef = doc(db, "userData", user.uid);
+		await setDoc(userRef, data);
+	}
+}
+
 export const UserProvider = ({ children }) => {
-	const isLocalStorageAvailable = typeof window !== "undefined" && window.localStorage;
-	const storedState = isLocalStorageAvailable ? localStorage.getItem("userDataState") : null;
-	const initialState = storedState ? JSON.parse(storedState) : defaultState;
-	const [userDataState, dispatch] = useReducer(userReducer, initialState);
+	const [userDataState, dispatch] = useReducer(userReducer, {});
+	const { user } = useAuthContext();
+
+	const router = useRouter();
 
 	useEffect(() => {
-		localStorage.setItem("userDataState", JSON.stringify(userDataState));
-	}, [userDataState]);
+		const getData = async () => {
+			try {
+				if (user) {
+					const docRef = doc(db, "userData", user.uid);
+					const docSnap = docRef ? await getDoc(docRef) : null;
+					docSnap.exists() ? updateState(docSnap.data()) : null;
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		getData();
+	}, [user]);
 
 	const updateTradingSession = (payload) => {
 		dispatch({ type: "UPDATE_TRADING_SESSION", payload });
@@ -79,6 +87,10 @@ export const UserProvider = ({ children }) => {
 
 	const updateUser = (payload) => {
 		dispatch({ type: "UPDATE_USER", payload });
+	};
+
+	const updateState = (payload) => {
+		dispatch({ type: "UPDATE_STATE", payload });
 	};
 
 	return (

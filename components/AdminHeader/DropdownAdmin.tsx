@@ -5,12 +5,19 @@ import { useUserContext } from "@/hooks/useUserContext";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useRouter } from "next/navigation";
 
-const DropdownUser = () => {
+const DropdownAdmin = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
-	const router = useRouter();
+	// const router = useRouter();
 
-	const { userDataState } = useUserContext();
-	const { logout } = useAuthContext();
+	// const { userDataState } = useUserContext();
+	// const { logout } = useAuthContext();
+
+	const userDataState = {
+		user: {
+			firstname: "frank",
+			lastname: "micheal",
+		},
+	};
 
 	const trigger = useRef<any>(null);
 	const dropdown = useRef<any>(null);
@@ -28,9 +35,9 @@ const DropdownUser = () => {
 	});
 
 	const handleLogout = () => {
-		logout();
-		router.push("/auth/login");
-		localStorage.removeItem("userToken");
+		// logout();
+		// router.push("/auth/login");
+		// localStorage.removeItem("userToken");
 	};
 
 	// close if the esc key is pressed
@@ -169,4 +176,4 @@ const DropdownUser = () => {
 	);
 };
 
-export default DropdownUser;
+export default DropdownAdmin;

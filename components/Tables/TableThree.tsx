@@ -1,5 +1,4 @@
 import { Trade } from "@/types/trade";
-import { useAppContext } from "@/hooks/useAppContext";
 import { useUserContext } from "@/hooks/useUserContext";
 
 const TableThree = () => {
@@ -7,7 +6,7 @@ const TableThree = () => {
 
 	return (
 		<>
-			{userDataState.tradingSession.length > 0 && (
+			{userDataState?.tradingSession?.length > 0 && (
 				<div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
 					<h2 className="font-bold text-xl mb-5">Latest Trades</h2>
 					<div className="max-w-full overflow-x-auto">

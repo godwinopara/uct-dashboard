@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import CardDataStats from "../CardDataStats";
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
 import { TickerTape } from "react-ts-tradingview-widgets";
@@ -8,6 +8,8 @@ import TableThree from "../Tables/TableThree";
 import { forexPairs, cryptoPairs } from "../data/data";
 import { useAppContext } from "@/hooks/useAppContext";
 import { useUserContext } from "@/hooks/useUserContext";
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 const Dashboard: React.FC = () => {
 	const [tradeOption, setTradeOption] = useState("");
@@ -15,11 +17,14 @@ const Dashboard: React.FC = () => {
 	const [pairs, setPairs] = useState("");
 	const [amount, setAmount] = useState(0);
 	const [lotSize, setLotSize] = useState("");
-	const [takeProfit, setTakeProfit] = useState(0);
-	const [stopLoss, setStopLoss] = useState(0);
+	const [takeProfit, setTakeProfit] = useState("");
+	const [stopLoss, setStopLoss] = useState("");
 
 	const { state } = useAppContext();
 	const { userDataState, updateTradingSession } = useUserContext();
+	const { user } = useAuthContext();
+
+	const router = useRouter();
 
 	const handleSubmit = (e: FormEvent): void => {
 		e.preventDefault();
@@ -38,6 +43,12 @@ const Dashboard: React.FC = () => {
 
 		updateTradingSession(tradingSession);
 	};
+
+	useEffect(() => {
+		if (!user) {
+			router.push("/auth/login");
+		}
+	}, [userDataState?.user, router]);
 
 	return (
 		<>
@@ -170,7 +181,7 @@ const Dashboard: React.FC = () => {
 							type="text"
 							value={takeProfit}
 							required
-							onChange={(e) => setTakeProfit(Number(e.target.value))}
+							onChange={(e) => setTakeProfit(e.target.value)}
 							placeholder="1.001"
 							className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
 						/>
@@ -181,7 +192,7 @@ const Dashboard: React.FC = () => {
 							type="text"
 							value={stopLoss}
 							required
-							onChange={(e) => setStopLoss(Number(e.target.value))}
+							onChange={(e) => setStopLoss(e.target.value)}
 							placeholder="1.0013"
 							className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
 						/>
