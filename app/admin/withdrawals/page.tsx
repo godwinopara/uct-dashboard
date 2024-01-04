@@ -1,6 +1,9 @@
-import { usersData } from "@/components/data/data";
+"use client";
+
 import { MdDeleteForever } from "react-icons/md";
-import { IoIosCheckmarkCircleOutline } from "react-icons/io";
+import { useAdminContext } from "@/hooks/useAdminContext";
+import { useState } from "react";
+import UploadButton from "@/components/UploadButtons/UploadButton";
 
 interface UserHistoryProps {
 	amount: number;
@@ -8,16 +11,41 @@ interface UserHistoryProps {
 	method: string;
 	status: string;
 	fullname: string;
+	id: string;
+	userId: string;
 }
 
 export default function Withdrawals() {
+	const [loading, setLoading] = useState<{ [id: string]: boolean }>({});
+	const { usersData, updateWithdrawal } = useAdminContext();
+
 	const history: any = [];
 
-	usersData.forEach((data) => {
-		data.widthdrawal.forEach((hist) => {
-			history.push({ ...hist, fullname: `${data.user.firstname} ${data.user.lastname}` });
+	usersData.forEach((data: any) => {
+		data.withdrawalHistory.forEach((hist: any) => {
+			history.push({
+				...hist,
+				fullname: `${data.user.firstname} ${data.user.lastname}`,
+				userId: data.userId,
+			});
 		});
 	});
+
+	const handleUpdateWithdrawalStatus = (userId: string, id: string) => {
+		let success = false;
+		setLoading((prevLoading) => ({ ...prevLoading, [id]: true }));
+
+		setTimeout(() => {
+			if (updateWithdrawal(userId, id)) {
+				success = true;
+			}
+		}, 1000);
+		setTimeout(() => {
+			if (success) {
+				setLoading((prevLoading) => ({ ...prevLoading, [id]: false }));
+			}
+		}, 500);
+	};
 
 	return (
 		<>
@@ -80,20 +108,21 @@ export default function Withdrawals() {
 												className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
 													userHistory.status === "Completed"
 														? "text-success bg-success"
-														: userHistory.status === "Unpaid"
-														? "text-danger bg-danger"
 														: "text-warning bg-warning"
 												}`}
 											>
 												{userHistory.status}
 											</p>
 										</td>
-										{userHistory.status === "pending" && (
+										{userHistory.status === "Pending" && (
 											<td className="border-b border-[#eee] py-5 px-4 flex items-center gap-x-2 dark:border-strokedark">
-												<button className="w-[110px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2">
-													<IoIosCheckmarkCircleOutline />
-													Approve
-												</button>
+												<UploadButton
+													approveBtnClick={handleUpdateWithdrawalStatus}
+													userId={userHistory.userId}
+													id={userHistory.id}
+													loading={loading[userHistory.id] || false}
+													btnText="Approve"
+												/>
 												<button className="w-[110px] rounded-md  bg-danger text-white py-2 px-3 flex items-center justify-center  gap-x-2">
 													<MdDeleteForever />
 													Remove

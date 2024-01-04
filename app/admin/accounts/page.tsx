@@ -1,13 +1,120 @@
 "use client";
 
-import React from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import { FaWallet } from "react-icons/fa";
-import { usersData } from "@/components/data/data";
 import { useAdminContext } from "@/hooks/useAdminContext";
+import Modal from "@/components/Modals/Modal";
+import UploadButton2 from "@/components/UploadButtons/UploadButton2";
 
 export default function Account() {
+	const { usersData, updateBalance } = useAdminContext();
+
+	const [showModal, setShowModal] = useState(false);
+	const [accountInput, setAccountInput] = useState({ balance: "", profit: "", bonus: "" });
+	const [userId, setUserId] = useState("");
+	const [loading, setLoading] = useState<{ [currentUserId: string]: boolean }>({});
+
+	const closeModal = () => {
+		setShowModal(false);
+	};
+
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+		const { name, value } = e.target;
+		setAccountInput((prev) => ({ ...prev, [name]: value }));
+	};
+
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		// if (userId) {
+		// 	updateBalance(userId, accountInput);
+		// 	closeModal();
+		// }
+
+		setLoading((prevLoading) => ({ ...prevLoading, [userId]: true }));
+
+		setTimeout(() => {
+			try {
+				updateBalance(userId, accountInput);
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setLoading((prevLoading) => ({ ...prevLoading, [userId]: false }));
+			}
+		}, 1000);
+
+		closeModal();
+	};
+
+	const handleClickToggleModal = (user: any) => {
+		setShowModal(true);
+		setUserId(user);
+	};
+
 	return (
 		<>
+			<Modal
+				show={showModal}
+				closeModal={closeModal}
+				title="Update Balance"
+				width={500}
+				height={500}
+			>
+				<form onSubmit={handleSubmit}>
+					<div className="mb-5 mt-10">
+						<label className="mb-2.5 block font-medium text-black">Account Balance</label>
+						<div className="relative">
+							<input
+								type="text"
+								name="balance"
+								required
+								onChange={handleInputChange}
+								placeholder="Balance"
+								className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none"
+							/>
+						</div>
+					</div>
+					<div className="mb-5">
+						<label className="mb-2.5 block font-medium text-black">Profit</label>
+						<div className="relative">
+							<input
+								type="text"
+								name="profit"
+								required
+								onChange={handleInputChange}
+								placeholder="Profit"
+								className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none"
+							/>
+						</div>
+					</div>
+					<div>
+						<label className="mb-2.5 block font-medium text-black">Bonus</label>
+						<div className="relative">
+							<input
+								type="text"
+								name="bonus"
+								required
+								onChange={handleInputChange}
+								placeholder="Bonus"
+								className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none"
+							/>
+						</div>
+					</div>
+					<div className="flex gap-x-4 mt-8">
+						<button
+							className="bg-meta-3 flex justify-center items-center text-white rounded-md font-medium px-8 py-2"
+							type="submit"
+						>
+							Update
+						</button>
+						<button
+							onClick={closeModal}
+							className="bg-danger flex justify-center items-center text-white rounded-md font-medium px-8 py-2"
+						>
+							Close
+						</button>
+					</div>
+				</form>
+			</Modal>
 			{usersData?.length > 0 && (
 				<div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
 					<h2 className="font-bold text-xl mb-5">ALL USERS ACCOUNT BALANCE</h2>
@@ -36,7 +143,7 @@ export default function Account() {
 								</tr>
 							</thead>
 							<tbody>
-								{usersData.map((userItem, key: number) => (
+								{usersData.map((userItem: any, key: number) => (
 									<tr key={key}>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<h5 className="text-black  dark:text-white">{key + 1}</h5>
@@ -58,10 +165,12 @@ export default function Account() {
 										</td>
 
 										<td className="border-b border-[#eee] py-5 px-4 flex items-center gap-x-2 dark:border-strokedark">
-											<button className="w-[170px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2">
-												<FaWallet />
-												Update Account
-											</button>
+											<UploadButton2
+												approveBtnClick={handleClickToggleModal}
+												userId={userItem.userId}
+												loading={loading[userItem.userId] || false}
+												btnText="Update Account"
+											/>
 										</td>
 									</tr>
 								))}

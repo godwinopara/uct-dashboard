@@ -9,7 +9,6 @@ import authImg from "public/images/auth/auth-screens.png";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useAuthContext } from "@/hooks/useAuthContext";
 
-import { useUserContext } from "@/hooks/useUserContext";
 import { useRouter } from "next/navigation";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
@@ -26,6 +25,8 @@ export default function Signup() {
 	const [formData, setFormData] = useState({
 		firstname: "",
 		lastname: "",
+		username: "",
+		gender: "",
 		email: "",
 		country: "",
 		mobile: "",
@@ -34,7 +35,6 @@ export default function Signup() {
 	});
 
 	const { signUp } = useAuthContext();
-	const { updateUser, saveNewUserData } = useUserContext();
 
 	const router = useRouter();
 
@@ -87,6 +87,8 @@ export default function Signup() {
 				setFormData({
 					firstname: "",
 					lastname: "",
+					username: "",
+					gender: "",
 					email: "",
 					country: "",
 					mobile: "",
@@ -182,6 +184,35 @@ export default function Signup() {
 										</div>
 									</div>
 								</div>
+								<div className="mb-4 xl:flex gap-x-3">
+									<div className="w-full">
+										<label className="mb-2.5 block font-medium text-black">Username</label>
+										<div className="relative">
+											<input
+												type="text"
+												name="username"
+												onChange={handleInputChange}
+												required
+												placeholder="Enter your Username"
+												className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none"
+											/>
+										</div>
+									</div>
+									<div className="w-full relative z-20 bg-transparent mb-4">
+										<label className="mb-2.5 block text-black dark:text-white">Gender</label>
+										<select
+											name="gender"
+											onChange={handleInputChange}
+											required
+											className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-meta-3 active:border-meta-3"
+										>
+											<option value="">Select Gender</option>
+											<option value="Male">Male</option>
+											<option value="Female">Female</option>
+										</select>
+									</div>
+								</div>
+
 								<div className="mb-4">
 									<label className="mb-2.5 block font-medium text-black ">Email</label>
 									<div className="relative">

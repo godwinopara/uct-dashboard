@@ -1,6 +1,11 @@
-import { usersData } from "@/components/data/data";
+"use client";
+// import { usersData } from "@/components/data/data";
 import { MdDeleteForever } from "react-icons/md";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
+import { useAdminContext } from "@/hooks/useAdminContext";
+import { useState } from "react";
+import loader from "@/public/images/icon/spinner.svg";
+import Image from "next/image";
 
 interface UserHistoryProps {
 	amount: number;
@@ -8,16 +13,42 @@ interface UserHistoryProps {
 	method: string;
 	status: string;
 	fullname: string;
+	id: string;
+	userId: string;
 }
 
 export default function Deposits() {
+	const { usersData, updateDeposit } = useAdminContext();
+	const [loading, setLoading] = useState(false);
+
 	const history: any = [];
 
-	usersData.forEach((data) => {
-		data.depositHistory.forEach((hist) => {
-			history.push({ ...hist, fullname: `${data.user.firstname} ${data.user.lastname}` });
+	usersData.forEach((data: any) => {
+		data.depositHistory.forEach((hist: any) => {
+			history.push({
+				...hist,
+				fullname: `${data.user.firstname} ${data.user.lastname}`,
+				userId: data.userId,
+			});
 		});
 	});
+
+	const handleUpdateDepositStatus = (userId: string, id: string) => {
+		let success = false;
+		setLoading(true);
+
+		setTimeout(() => {
+			if (updateDeposit(userId, id)) {
+				success = true;
+			}
+		}, 1000);
+
+		setTimeout(() => {
+			if (success) {
+				setLoading(false);
+			}
+		}, 500);
+	};
 
 	return (
 		<>
@@ -84,18 +115,25 @@ export default function Deposits() {
 												className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
 													userHistory.status === "Completed"
 														? "text-success bg-success"
-														: userHistory.status === "Unpaid"
-														? "text-danger bg-danger"
 														: "text-warning bg-warning"
 												}`}
 											>
 												{userHistory.status}
 											</p>
 										</td>
-										{userHistory.status === "pending" && (
+										{userHistory.status === "Pending" && (
 											<td className="border-b border-[#eee] py-5 px-4 flex items-center gap-x-2 dark:border-strokedark">
-												<button className="w-[110px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2">
-													<IoIosCheckmarkCircleOutline />
+												<button
+													onClick={() =>
+														handleUpdateDepositStatus(userHistory.userId, userHistory.id)
+													}
+													className="w-[110px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2"
+												>
+													{loading ? (
+														<Image src={loader} alt="loading icon" height={20} width={20} />
+													) : (
+														<IoIosCheckmarkCircleOutline />
+													)}
 													Approve
 												</button>
 												<button className="w-[110px] rounded-md  bg-danger text-white py-2 px-3 flex items-center justify-center  gap-x-2">

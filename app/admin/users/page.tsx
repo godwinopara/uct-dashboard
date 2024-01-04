@@ -1,21 +1,98 @@
 "use client";
 
-import React, { ReactNode, useState } from "react";
-import { FaRegUser, FaWallet } from "react-icons/fa";
+import React, { ChangeEvent, FormEvent, ReactNode, useEffect, useState } from "react";
+import { FaWallet } from "react-icons/fa";
 import { MdDeleteForever, MdLogin } from "react-icons/md";
 import { ImBlocked } from "react-icons/im";
-// import { usersData } from "@/components/data/data";
-import Rodal from "rodal";
-import "rodal/lib/rodal.css";
 import { useAdminContext } from "@/hooks/useAdminContext";
+import Modal from "@/components/Modals/Modal";
+import UploadButton2 from "@/components/UploadButtons/UploadButton2";
 
 export default function Users() {
-	// const [openModal, setOpenModal] = useState(true);
-	const { usersData } = useAdminContext();
-	// console.log(data);
+	const { usersData, updateUserData } = useAdminContext();
+	const [currentUserId, setCurrentUserId] = useState<any>("");
+	const [showModal, setShowModal] = useState(false);
+	const [userInput, setUserInput] = useState("");
+
+	const [loading, setLoading] = useState<{ [currentUserId: string]: boolean }>({});
+
+	const handleBillUser = (user: any) => {
+		setShowModal(true);
+		setCurrentUserId(user);
+	};
+
+	const closeModal = () => {
+		setShowModal(false);
+	};
+
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		setLoading((prevLoading) => ({ ...prevLoading, [currentUserId]: true }));
+
+		setTimeout(() => {
+			try {
+				updateUserData(currentUserId, userInput);
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setLoading((prevLoading) => ({ ...prevLoading, [currentUserId]: false }));
+			}
+		}, 1000);
+
+		closeModal();
+	};
+
+	const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+		setUserInput(e.target.value);
+	};
 
 	return (
 		<>
+			<Modal show={showModal} closeModal={closeModal} title="Bill User" height={270} width={500}>
+				<form onSubmit={handleSubmit}>
+					<div className="w-full relative z-20 bg-transparent mb-4">
+						<label className="mb-2.5 block text-black">Choose Status</label>
+						<select
+							name="billuser"
+							required
+							onChange={handleSelectChange}
+							value={userInput}
+							className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-meta-3 active:border-meta-3"
+						>
+							<option value="">Choose Status</option>
+							<option value="Active">Active</option>
+							<option value="Pending">Pending</option>
+							<option value="Signal Fee">Signal Fee</option>
+							<option value="Upgrade">Upgrade</option>
+							<option value="Insurance">Insurance</option>
+							<option value="Stamp Duty">Stamp Duty</option>
+							<option value="Trading Time">Trading Time</option>
+							<option value="IRS">IRS</option>
+							<option value="Broker Fee">Broker Fee</option>
+							<option value="Account Management Fee">Account Management Fee</option>
+							<option value="Cost of Transfer">Cost of Transfer</option>
+							<option value="Withdrawal Fee">Withdrawal Fee</option>
+							<option value="Trade Commission Fee">Trade Commission Fee</option>
+						</select>
+					</div>
+
+					<div className="flex gap-x-4 mt-8">
+						<button
+							className="bg-meta-3 flex justify-center items-center text-white rounded-md font-medium px-8 py-2"
+							type="submit"
+						>
+							Update
+						</button>
+						<button
+							onClick={closeModal}
+							className="bg-danger flex justify-center items-center text-white rounded-md font-medium px-8 py-2"
+						>
+							Close
+						</button>
+					</div>
+				</form>
+			</Modal>
 			{usersData?.length > 0 && (
 				<div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
 					<h2 className="font-bold text-xl mb-5">ALL USERS</h2>
@@ -47,7 +124,7 @@ export default function Users() {
 									<th className="min-w-[100px] py-4 px-4 font-medium text-black dark:text-white">
 										Gender
 									</th>
-									<th className="min-w-[100px] py-4 px-4 font-medium text-black dark:text-white">
+									<th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
 										Status
 									</th>
 									<th className="min-w-[200px] py-4 px-4 font-medium text-black dark:text-white">
@@ -89,21 +166,26 @@ export default function Users() {
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<p className="text-black dark:text-white">{userItem.user.gender}</p>
 										</td>
-										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p className="text-black dark:text-white">{userItem.user.status}</p>
+										<td className="border-b min-w-fit border-[#eee] py-5 px-4 dark:border-strokedark">
+											<p className="text-black min-w-fit dark:text-white">{userItem.user.status}</p>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<p className="text-black dark:text-white">{userItem.user.joinedDate}</p>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 flex items-center gap-x-2 dark:border-strokedark">
-											<button className="w-[120px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2">
+											{/* <button
+												onClick={() => handleBillUser(userItem.userId)}
+												className="w-[120px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2"
+											>
 												<FaWallet />
 												Bill User
-											</button>
-											<button className="w-[150px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2">
-												<FaRegUser />
-												Update User
-											</button>
+											</button> */}
+											<UploadButton2
+												approveBtnClick={handleBillUser}
+												userId={userItem.userId}
+												loading={loading[userItem.userId] || false}
+												btnText="Bill User"
+											/>
 											<button className="w-[100px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2">
 												<MdLogin />
 												Login
@@ -124,29 +206,6 @@ export default function Users() {
 					</div>
 				</div>
 			)}
-
-			{/* <Modal show={openModal} closeModal={() => setOpenModal(false)}>
-				<div>
-					Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus nulla velit alias numquam
-					omnis placeat quis pariatur blanditiis quod consequuntur!
-				</div>
-			</Modal> */}
 		</>
 	);
 }
-
-interface ModalProps {
-	show: boolean;
-	closeModal: () => void;
-	children: ReactNode;
-}
-
-const Modal = ({ show, closeModal, children }: ModalProps) => {
-	return (
-		<Rodal visible={show} onClose={closeModal}>
-			<div className="text-black">{children}</div>
-		</Rodal>
-	);
-};
-
-// className = "bg-black dark:bg-boxdark";
