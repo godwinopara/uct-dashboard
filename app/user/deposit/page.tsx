@@ -4,8 +4,11 @@ import DepositTable from "@/components/Tables/DepositTable";
 import Modal from "@/components/modal/Modal";
 import { useUserContext } from "@/hooks/useUserContext";
 import { FormData } from "@/types/formdata";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { FaInfoCircle, FaTimes } from "react-icons/fa";
+import { v4 as uuidv4 } from "uuid";
+import { storage } from "@/config/firebase";
 
 export default function Deposit() {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -26,11 +29,15 @@ export default function Deposit() {
 		}));
 	};
 
-	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files ? e.target.files[0] : null;
+		const storageRef = ref(storage, `payment_receipt/${file?.name}`);
+		await uploadBytes(storageRef, file as Blob);
+
+		const imgUrl = await getDownloadURL(storageRef);
 		setFormData((prevData) => ({
 			...prevData,
-			paymentReceipt: file,
+			paymentReceipt: imgUrl,
 		}));
 	};
 
@@ -42,17 +49,23 @@ export default function Deposit() {
 		setNotificationModalIsOpen(false);
 	};
 
-	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+
 		const payload = {
 			method: formData.paymentMethod,
-			amount: Number(formData.amount),
-			status: "pending",
+			amount: formData.amount,
+			status: "Pending",
+			id: uuidv4(),
+			screenshot: formData.paymentReceipt,
 			date: new Date().toDateString(),
 		};
-		updateDepositHistory(payload);
-		closeModal();
-		setNotificationModalIsOpen(true);
+
+		if (formData.paymentReceipt) {
+			updateDepositHistory(payload);
+			closeModal();
+			setNotificationModalIsOpen(true);
+		}
 	};
 	return (
 		<div>

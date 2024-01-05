@@ -7,6 +7,7 @@ import { useAppContext } from "@/hooks/useAppContext";
 import { useUserContext } from "@/hooks/useUserContext";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { FaInfoCircle, FaTimes } from "react-icons/fa";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Withdrawal() {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -36,8 +37,9 @@ export default function Withdrawal() {
 		const payload = {
 			method: formData.paymentMethod,
 			amount: formData.amount,
-			status: "pending",
+			status: "Pending",
 			date: new Date().toDateString(),
+			id: uuidv4(),
 		};
 
 		updateWithdrawalHistory(payload);

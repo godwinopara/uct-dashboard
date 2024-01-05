@@ -69,9 +69,6 @@ export default function TradeHistories() {
 			status: updateTradeStatus.status,
 		};
 
-		// updateTrade(userId, data, tradeId);
-		// closeModal();
-
 		setLoading((prevLoading) => ({ ...prevLoading, [tradeId]: true }));
 
 		setTimeout(() => {

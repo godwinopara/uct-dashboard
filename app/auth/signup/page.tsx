@@ -49,22 +49,13 @@ export default function Signup() {
 	const handleSubmitSignUp = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const newUserData = {
-			firstname: formData.firstname,
-			lastname: formData.lastname,
-			email: formData.email,
-			country: formData.country,
-			mobile: formData.mobile,
-			password: formData.password,
-		};
-
 		if (formData.password !== formData.confirmPassword) {
 			setError("Password Mismatch: Password and Confirm Password not the same");
 			return;
 		}
 
 		try {
-			const signup = await signUp(formData.email, formData.password).then();
+			const signup = await signUp(formData.email, formData.password);
 			if (signup) {
 				const userRef = collection(db, "userData");
 				await setDoc(doc(userRef, signup.user.uid), {
@@ -74,6 +65,9 @@ export default function Signup() {
 					tradingSession: [],
 					depositHistory: [],
 					withdrawalHistory: [],
+					userId: signup.user.uid,
+					subscription: {},
+					verification: {},
 					user: {
 						firstname: formData.firstname[0].toUpperCase() + formData.firstname.slice(1),
 						lastname: formData.lastname[0].toUpperCase() + formData.lastname.slice(1),
@@ -81,6 +75,10 @@ export default function Signup() {
 						password: formData.password,
 						country: formData.country,
 						mobile: formData.mobile,
+						status: "Active",
+						username: formData.username,
+						gender: formData.gender,
+						joinedDate: new Date().toDateString(),
 					},
 				});
 				setError(null);

@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			if (user) {
-				setUser({ uid: user.uid, email: user.email });
+				setUser({ uid: user.uid, email: user.email, username: user.metadata });
 			} else {
 				setUser(null);
 			}
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 		return () => unsubscribe();
 	}, []);
 
-	const signUp = (email, password) => {
+	const signUp = (email, password, username) => {
 		return createUserWithEmailAndPassword(auth, email, password);
 	};
 

@@ -34,6 +34,18 @@ const userReducer = (state, action) => {
 				...state,
 				user: { ...state.user, ...action.payload },
 			};
+		case "UPDATE_SUBSCRIPTION":
+			saveToFirebase({ ...state, subscription: { ...action.payload } });
+			return {
+				...state,
+				subscription: { ...action.payload },
+			};
+		case "UPDATE_VERIFICATION":
+			saveToFirebase({ ...state, verification: { ...action.payload } });
+			return {
+				...state,
+				verification: { ...action.payload },
+			};
 
 		case "UPDATE_STATE":
 			return action.payload;
@@ -93,6 +105,14 @@ export const UserProvider = ({ children }) => {
 		dispatch({ type: "UPDATE_STATE", payload });
 	};
 
+	const updateSubscription = (payload) => {
+		dispatch({ type: "UPDATE_SUBSCRIPTION", payload });
+	};
+
+	const updateVerification = (payload) => {
+		dispatch({ type: "UPDATE_VERIFICATION", payload });
+	};
+
 	return (
 		<UserContext.Provider
 			value={{
@@ -101,6 +121,8 @@ export const UserProvider = ({ children }) => {
 				updateTradingSession,
 				updateDepositHistory,
 				updateWithdrawalHistory,
+				updateSubscription,
+				updateVerification,
 			}}
 		>
 			{children}
