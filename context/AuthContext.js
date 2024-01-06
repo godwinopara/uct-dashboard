@@ -7,6 +7,8 @@ import {
 	signOut,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
+	GoogleAuthProvider,
+	signInWithPopup,
 } from "firebase/auth";
 import { useUserContext } from "@/hooks/useUserContext";
 
@@ -35,12 +37,19 @@ export const AuthProvider = ({ children }) => {
 		return signInWithEmailAndPassword(auth, email, password);
 	};
 
+	const signInWithGoogle = async () => {
+		const provider = new GoogleAuthProvider();
+		await signInWithPopup(auth, provider);
+	};
+
 	const logout = async () => {
 		setUser(null);
 		await signOut(auth);
 	};
 
 	return (
-		<AuthContext.Provider value={{ user, signUp, login, logout }}>{children}</AuthContext.Provider>
+		<AuthContext.Provider value={{ user, signUp, login, logout, signInWithGoogle }}>
+			{children}
+		</AuthContext.Provider>
 	);
 };
