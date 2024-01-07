@@ -1,11 +1,13 @@
 "use client";
 
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import CardDataStats from "@/components/CardDataStats";
 import WithdrawalTable from "@/components/Tables/WithdrawalTable";
 import Modal from "@/components/modal/Modal";
 import { useAppContext } from "@/hooks/useAppContext";
 import { useUserContext } from "@/hooks/useUserContext";
 import { ChangeEvent, FormEvent, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { FaInfoCircle, FaTimes } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
 
@@ -43,7 +45,25 @@ export default function Withdrawal() {
 		};
 
 		updateWithdrawalHistory(payload);
-		setModalIsOpen(true);
+
+		toast.success(
+			"You withdrawal request has been received. You will receive a confirmation via email!",
+			{
+				duration: 6000,
+				position: "top-right",
+				style: {
+					padding: "16px",
+					fontWeight: "bold",
+					minWidth: "400px",
+				},
+				iconTheme: {
+					primary: "#10B981",
+					secondary: "#FFFF",
+				},
+			}
+		);
+
+		//
 		setFormData({
 			paymentMethod: "",
 			amount: "",
@@ -60,22 +80,8 @@ export default function Withdrawal() {
 
 	return (
 		<>
-			<Modal modalIsOpen={modalIsOpen}>
-				<div className="mt-14 md:mt-0 flex items-center justify-between mb-5 overflow-auto">
-					<h3 className="text-xl font-bold">Transaction Notification</h3>
-					<button className="dark:text-white text-xl border border-black" onClick={closeModal}>
-						<FaTimes />
-					</button>
-				</div>
-				<div className="flex items-center gap-x-5">
-					<div className="text-3xl text-meta-3">
-						<FaInfoCircle />
-					</div>
-					<p className="text-meta-3 text-lg">
-						You withdrawal request has been received. You will receive a confirmation via email!
-					</p>
-				</div>
-			</Modal>
+			<Breadcrumb pageName="Withdrawals" />
+			<Toaster />
 			<div className="grid xl:grid-cols-3 gap-y-8 xl:gap-y-0 xl:gap-x-10 mb-16">
 				<CardDataStats title="Total Balance in Dollars" totalUsd={userDataState.totalBalance} />
 				<CardDataStats

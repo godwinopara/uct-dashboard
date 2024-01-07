@@ -114,6 +114,31 @@ export const AdminProvider = ({ children }) => {
 		}
 	};
 
+	const updateSubscription = async (userId) => {
+		const docRef = doc(db, "userData", userId);
+		const docSnap = await getDoc(docRef);
+
+		await updateDoc(docRef, {
+			subscription: {},
+		});
+
+		setRefresh((prev) => prev + 1);
+	};
+
+	const updateVerification = async (userId) => {
+		const docRef = doc(db, "userData", userId);
+		const docSnap = await getDoc(docRef);
+		console.log(docSnap.data().verification);
+
+		await updateDoc(docRef, {
+			verification: {
+				...docSnap.data().verification,
+				status: "Verified",
+			},
+		});
+		setRefresh((prev) => prev + 1);
+	};
+
 	return (
 		<AdminContext.Provider
 			value={{
@@ -123,6 +148,8 @@ export const AdminProvider = ({ children }) => {
 				updateTrade,
 				updateDeposit,
 				updateWithdrawal,
+				updateSubscription,
+				updateVerification,
 			}}
 		>
 			{children}

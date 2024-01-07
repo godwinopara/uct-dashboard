@@ -4,12 +4,13 @@ import { FormEvent, useContext, useEffect, useState } from "react";
 import CardDataStats from "../CardDataStats";
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
 import { TickerTape } from "react-ts-tradingview-widgets";
-import TableThree from "../Tables/TableThree";
 import { forexPairs, cryptoPairs } from "../data/data";
 import { useAppContext } from "@/hooks/useAppContext";
 import { useUserContext } from "@/hooks/useUserContext";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import DashboardTable from "@/components/Tables/DashboardTable";
+import { v4 as uuidv4 } from "uuid";
 
 const Dashboard: React.FC = () => {
 	const [tradeOption, setTradeOption] = useState("");
@@ -33,12 +34,14 @@ const Dashboard: React.FC = () => {
 			tradeOption,
 			tradeType,
 			pairs,
-			amount,
+			entry: amount,
 			lotSize,
 			takeProfit,
 			stopLoss,
 			profit: 0,
-			status: "pending",
+			status: "Pending",
+			date: new Date().toDateString(),
+			id: uuidv4(),
 		};
 
 		updateTradingSession(tradingSession);
@@ -222,7 +225,7 @@ const Dashboard: React.FC = () => {
 				</form>
 
 				<div className="col-span-12">
-					<TableThree />
+					<DashboardTable />
 				</div>
 			</div>
 		</>

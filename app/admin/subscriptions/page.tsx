@@ -1,11 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { MdCancel } from "react-icons/md";
 import { useAdminContext } from "@/hooks/useAdminContext";
+import toast, { Toaster } from "react-hot-toast";
+import Modal from "@/components/Modals/Modal";
 
 export default function Subscriptions() {
-	const { usersData } = useAdminContext();
+	const { usersData, updateSubscription } = useAdminContext();
+
+	const [showModal, setShowModal] = useState(false);
+	const [allowEndSubscription, setAllowEndSubscription] = useState(false);
+	const [user, setUser] = useState("");
 
 	let subscriptionCount = 0;
 	const subscriptions: any = [];
@@ -15,13 +21,82 @@ export default function Subscriptions() {
 			subscriptions.push({
 				...data.subscription,
 				fullname: `${data.user.firstname} ${data.user.lastname}`,
+				userId: data.userId,
 			});
 			subscriptionCount++;
 		}
 	});
 
+	const handleClickEndSubscription = (userId: string) => {
+		setShowModal(true);
+		setUser(userId);
+	};
+
+	const closeModal = () => {
+		setShowModal(false);
+	};
+
+	const handleAllowTerminateSubscription = () => {
+		setAllowEndSubscription(true);
+
+		setTimeout(() => {
+			if (!user && !allowEndSubscription) {
+				return;
+			}
+			try {
+				updateSubscription(user);
+				toast.success("Subscription was terminated Successfully", {
+					duration: 6000,
+					position: "top-center",
+					style: {
+						padding: "8px",
+						fontWeight: "bold",
+						minWidth: "300px",
+					},
+					iconTheme: {
+						primary: "#10B981",
+						secondary: "#FFFF",
+					},
+				});
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setShowModal(false);
+			}
+		}, 1000);
+	};
+
 	return (
 		<>
+			<Toaster />
+			<Modal
+				show={showModal}
+				closeModal={closeModal}
+				title="Terminate User Subscription"
+				height={270}
+				width={400}
+			>
+				<div className="flex text-center items-center justify-center">
+					<div>
+						<h2 className="text-xl">Are you sure you want to cancel this Subscription</h2>
+						<div className="flex justify-center gap-x-4 mt-8">
+							<button
+								onClick={handleAllowTerminateSubscription}
+								className="bg-meta-3 flex justify-center items-center text-white rounded-md font-medium px-8 py-2"
+								type="submit"
+							>
+								Yes
+							</button>
+							<button
+								onClick={closeModal}
+								className="bg-danger flex justify-center items-center text-white rounded-md font-medium px-8 py-2"
+							>
+								No
+							</button>
+						</div>
+					</div>
+				</div>
+			</Modal>
 			<div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
 				<h2 className="font-bold text-xl mb-5">ALL SUBSCRIPTIONS</h2>
 				<div className="max-w-full overflow-x-auto">
@@ -59,13 +134,11 @@ export default function Subscriptions() {
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<h5 className="text-black  dark:text-white">{key + 1}</h5>
 										</td>
-
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<h5 className="font-medium text-black dark:text-white">
 												{subscription.fullname}
 											</h5>
 										</td>
-
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<p className="text-black dark:text-white">{subscription?.plan}</p>
 										</td>
@@ -80,7 +153,10 @@ export default function Subscriptions() {
 										</td>
 
 										<td className="border-b border-[#eee] py-5 px-4 flex items-center gap-x-2 dark:border-strokedark">
-											<button className="w-[170px] rounded-md  bg-danger text-white py-2 px-3 flex items-center justify-center  gap-x-2">
+											<button
+												onClick={() => handleClickEndSubscription(subscription.userId)}
+												className="w-[170px] rounded-md  bg-danger text-white py-2 px-3 flex items-center justify-center  gap-x-2"
+											>
 												<MdCancel />
 												End Subscription
 											</button>

@@ -5,12 +5,12 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
 	title: "User Settings | Universal Cryptosphere Trade Dashboard",
 	description: "This is User Settings Page",
-	// other metadata
 };
 
 const Settings = () => {
 	return (
 		<>
+			<Breadcrumb pageName="Settings" />
 			<div className="mx-auto max-w-270">
 				<div className="grid grid-cols-5 gap-8">
 					<div className="col-span-5 xl:col-span-3">

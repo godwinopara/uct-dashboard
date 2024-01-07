@@ -7,13 +7,13 @@ import { ImBlocked } from "react-icons/im";
 import { useAdminContext } from "@/hooks/useAdminContext";
 import Modal from "@/components/Modals/Modal";
 import UploadButton2 from "@/components/UploadButtons/UploadButton2";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Users() {
 	const { usersData, updateUserData } = useAdminContext();
 	const [currentUserId, setCurrentUserId] = useState<any>("");
 	const [showModal, setShowModal] = useState(false);
 	const [userInput, setUserInput] = useState("");
-
 	const [loading, setLoading] = useState<{ [currentUserId: string]: boolean }>({});
 
 	const handleBillUser = (user: any) => {
@@ -27,9 +27,7 @@ export default function Users() {
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-
 		setLoading((prevLoading) => ({ ...prevLoading, [currentUserId]: true }));
-
 		setTimeout(() => {
 			try {
 				updateUserData(currentUserId, userInput);
@@ -37,6 +35,19 @@ export default function Users() {
 				console.log(error);
 			} finally {
 				setLoading((prevLoading) => ({ ...prevLoading, [currentUserId]: false }));
+				toast.success("Status was updated Successfully", {
+					duration: 6000,
+					position: "top-center",
+					style: {
+						padding: "16px",
+						fontWeight: "bold",
+						minWidth: "300px",
+					},
+					iconTheme: {
+						primary: "#10B981",
+						secondary: "#FFFF",
+					},
+				});
 			}
 		}, 1000);
 
@@ -49,7 +60,8 @@ export default function Users() {
 
 	return (
 		<>
-			<Modal show={showModal} closeModal={closeModal} title="Bill User" height={270} width={500}>
+			<Toaster />
+			<Modal show={showModal} closeModal={closeModal} title="Bill User" height={270} width={400}>
 				<form onSubmit={handleSubmit}>
 					<div className="w-full relative z-20 bg-transparent mb-4">
 						<label className="mb-2.5 block text-black">Choose Status</label>
@@ -173,13 +185,6 @@ export default function Users() {
 											<p className="text-black dark:text-white">{userItem.user.joinedDate}</p>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 flex items-center gap-x-2 dark:border-strokedark">
-											{/* <button
-												onClick={() => handleBillUser(userItem.userId)}
-												className="w-[120px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2"
-											>
-												<FaWallet />
-												Bill User
-											</button> */}
 											<UploadButton2
 												approveBtnClick={handleBillUser}
 												userId={userItem.userId}

@@ -5,6 +5,7 @@ import { FaWallet } from "react-icons/fa";
 import { useAdminContext } from "@/hooks/useAdminContext";
 import Modal from "@/components/Modals/Modal";
 import UploadButton2 from "@/components/UploadButtons/UploadButton2";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Account() {
 	const { usersData, updateBalance } = useAdminContext();
@@ -39,6 +40,19 @@ export default function Account() {
 				console.log(error);
 			} finally {
 				setLoading((prevLoading) => ({ ...prevLoading, [userId]: false }));
+				toast.success("Account Balance was updated Successfully", {
+					duration: 6000,
+					position: "top-center",
+					style: {
+						padding: "16px",
+						fontWeight: "bold",
+						minWidth: "300px",
+					},
+					iconTheme: {
+						primary: "#10B981",
+						secondary: "#FFFF",
+					},
+				});
 			}
 		}, 1000);
 
@@ -52,6 +66,7 @@ export default function Account() {
 
 	return (
 		<>
+			<Toaster />
 			<Modal
 				show={showModal}
 				closeModal={closeModal}

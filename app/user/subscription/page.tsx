@@ -1,5 +1,6 @@
 "use client";
 
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { useUserContext } from "@/hooks/useUserContext";
 import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
@@ -26,6 +27,7 @@ export default function Subscription() {
 
 	return (
 		<>
+			<Breadcrumb pageName="Subscriptions" />
 			<div className="mb-10 rounded-md border border-stroke  bg-white py-4 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark">
 				<div className="my-1 flex items-end justify-between">
 					<div>
@@ -68,20 +70,22 @@ export default function Subscription() {
 			)}
 
 			{selectedPlan.plan && (
-				<div className=" bg-boxdark flex flex-col items-center justify-center text-center h-full py-20">
+				<div className="border-stroke  bg-white dark:bg-boxdark flex flex-col items-center justify-center text-center h-full py-20">
 					<div className="text-6xl text-meta-3 mb-3">
 						<FaCheckCircle />
 					</div>
-					<h2 className="text-2xl font-bold mb-3">Subscription Confirmed!</h2>
-					<p className="max-w-150 mb-5">
+					<h2 className="text-2xl font-bold mb-3 text-black dark:text-white">
+						Subscription Confirmed!
+					</h2>
+					<p className="max-w-150 mb-5 text-black dark:text-white">
 						Your Subscription to <span className="text-meta-3">{selectedPlan.plan}</span> plan was
 						successful and actively running, <br />
 						Returns attached to the plan will start reflecting on your Portfolio Balance shortly.
 					</p>
-					<h3 className="font-bold mb-3">
+					<h3 className="font-bold mb-3 text-black dark:text-white">
 						Plan Name: <span className="text-meta-3">{selectedPlan.plan}</span>
 					</h3>
-					<p className="font-bold">
+					<p className="font-bold text-black dark:text-white">
 						Subscribed Amount: <span className="text-meta-3">{selectedPlan.amount}</span>
 					</p>
 				</div>

@@ -1,7 +1,7 @@
 import { Trade } from "@/types/trade";
 import { useUserContext } from "@/hooks/useUserContext";
 
-const TableThree = () => {
+const DashboardTable = () => {
 	const { userDataState } = useUserContext();
 
 	return (
@@ -96,4 +96,4 @@ const TableThree = () => {
 	);
 };
 
-export default TableThree;
+export default DashboardTable;

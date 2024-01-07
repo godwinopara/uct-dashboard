@@ -1,11 +1,5 @@
-import Link from "next/link";
-import DarkModeSwitcher from "../DarkModeSwitcher";
 import DropdownAdmin from "./DropdownAdmin";
-
-// import DropdownMessage from "./DropdownMessage";
-// import DropdownNotification from "./DropdownNotification";
-// import DropdownUser from "./DropdownUser";
-import Image from "next/image";
+import DarkModeSwitcher from "../Header/DarkModeSwitcher";
 
 const AdminHeader = (props: {
 	sidebarOpen: string | boolean | undefined;

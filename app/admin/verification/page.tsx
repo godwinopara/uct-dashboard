@@ -8,11 +8,15 @@ import { useAdminContext } from "@/hooks/useAdminContext";
 import { FaRegEyeSlash } from "react-icons/fa6";
 import Modal from "@/components/Modals/Modal";
 import Image from "next/image";
+import toast, { Toaster } from "react-hot-toast";
+import UploadButton2 from "@/components/UploadButtons/UploadButton2";
 
 export default function Verification() {
-	const { usersData } = useAdminContext();
 	const [viewImg, setViewImg] = useState("");
 	const [showModal, setShowModal] = useState(false);
+	const [loading, setLoading] = useState<{ [currentUserId: string]: boolean }>({});
+
+	const { usersData, updateVerification } = useAdminContext();
 
 	const verifications: any = [];
 
@@ -38,14 +42,47 @@ export default function Verification() {
 		setViewImg("");
 	};
 
+	const handleVerification = (userId: string) => {
+		setLoading((prevLoading) => ({ ...prevLoading, [userId]: true }));
+
+		if (!userId) {
+			return;
+		}
+
+		setTimeout(() => {
+			try {
+				updateVerification(userId);
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setLoading((prevLoading) => ({ ...prevLoading, [userId]: false }));
+
+				toast.success("Verification status has been updated Successfully", {
+					duration: 6000,
+					position: "top-center",
+					style: {
+						padding: "8px",
+						fontWeight: "bold",
+						minWidth: "350px",
+					},
+					iconTheme: {
+						primary: "#10B981",
+						secondary: "#FFFF",
+					},
+				});
+			}
+		}, 1000);
+	};
+
 	return (
 		<>
+			<Toaster />
 			{showModal && (
 				<Modal
 					show={showModal}
 					closeModal={closeModal}
 					title="User IDentification"
-					height={400}
+					height={450}
 					width={400}
 				>
 					<div className="flex items-center justify-center">
@@ -100,7 +137,7 @@ export default function Verification() {
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<p
 												className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-													userItem.verification?.status === "Verified"
+													userItem.status === "Verified"
 														? "text-success bg-success"
 														: "text-warning bg-warning"
 												}`}
@@ -111,10 +148,12 @@ export default function Verification() {
 
 										{userItem.status === "Pending" && (
 											<td className="border-b border-[#eee] py-5 px-4 flex items-center gap-x-2 dark:border-strokedark">
-												<button className="w-[110px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-1">
-													<IoIosCheckmarkCircleOutline />
-													Approve
-												</button>
+												<UploadButton2
+													approveBtnClick={handleVerification}
+													userId={userItem.userId}
+													loading={loading[userItem.userId] || false}
+													btnText="Approve"
+												/>
 												<button className="w-[110px] rounded-md  bg-danger text-white py-2 px-3 flex items-center justify-center  gap-x-1">
 													<MdDeleteForever />
 													Remove

@@ -6,6 +6,8 @@ import { useAdminContext } from "@/hooks/useAdminContext";
 import { useState } from "react";
 import loader from "@/public/images/icon/spinner.svg";
 import Image from "next/image";
+import UploadButton from "@/components/UploadButtons/UploadButton";
+import toast, { Toaster } from "react-hot-toast";
 
 interface UserHistoryProps {
 	amount: number;
@@ -19,7 +21,8 @@ interface UserHistoryProps {
 
 export default function Deposits() {
 	const { usersData, updateDeposit } = useAdminContext();
-	const [loading, setLoading] = useState(false);
+	// const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState<{ [id: string]: boolean }>({});
 
 	const history: any = [];
 
@@ -35,23 +38,50 @@ export default function Deposits() {
 
 	const handleUpdateDepositStatus = (userId: string, id: string) => {
 		let success = false;
-		setLoading(true);
+		setLoading((prevLoading) => ({ ...prevLoading, [id]: true }));
 
 		setTimeout(() => {
 			if (updateDeposit(userId, id)) {
 				success = true;
 			}
+			toast.success("Deposit status updated Successfully", {
+				duration: 6000,
+				position: "top-center",
+				style: {
+					padding: "8px",
+					fontWeight: "bold",
+					minWidth: "300px",
+				},
+				iconTheme: {
+					primary: "#10B981",
+					secondary: "#FFFF",
+				},
+			});
 		}, 1000);
 
 		setTimeout(() => {
 			if (success) {
-				setLoading(false);
+				setLoading((prevLoading) => ({ ...prevLoading, [id]: false }));
+				toast.success("Deposit status updated Successfully", {
+					duration: 6000,
+					position: "top-center",
+					style: {
+						padding: "8px",
+						fontWeight: "bold",
+						minWidth: "300px",
+					},
+					iconTheme: {
+						primary: "#10B981",
+						secondary: "#FFFF",
+					},
+				});
 			}
 		}, 500);
 	};
 
 	return (
 		<>
+			<Toaster />
 			{usersData?.length > 0 && (
 				<div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
 					<h2 className="font-bold text-xl mb-5">ALL USERS DEPOSITS</h2>
@@ -123,19 +153,13 @@ export default function Deposits() {
 										</td>
 										{userHistory.status === "Pending" && (
 											<td className="border-b border-[#eee] py-5 px-4 flex items-center gap-x-2 dark:border-strokedark">
-												<button
-													onClick={() =>
-														handleUpdateDepositStatus(userHistory.userId, userHistory.id)
-													}
-													className="w-[110px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2"
-												>
-													{loading ? (
-														<Image src={loader} alt="loading icon" height={20} width={20} />
-													) : (
-														<IoIosCheckmarkCircleOutline />
-													)}
-													Approve
-												</button>
+												<UploadButton
+													approveBtnClick={handleUpdateDepositStatus}
+													userId={userHistory.userId}
+													id={userHistory.id}
+													loading={loading[userHistory.id] || false}
+													btnText="Approve"
+												/>
 												<button className="w-[110px] rounded-md  bg-danger text-white py-2 px-3 flex items-center justify-center  gap-x-2">
 													<MdDeleteForever />
 													Remove

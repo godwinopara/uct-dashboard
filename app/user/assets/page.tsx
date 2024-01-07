@@ -1,5 +1,6 @@
 "use client";
 
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import CardDataStats from "@/components/CardDataStats";
 import AssetsTable from "@/components/Tables/AssetsTable";
 import { useAppContext } from "@/hooks/useAppContext";
@@ -13,6 +14,7 @@ export default function Assets() {
 
 	return (
 		<>
+			<Breadcrumb pageName="Assets" />
 			<div className="grid xl:grid-cols-3 gap-y-10 xl:gap-y-0 xl:gap-x-10 mb-20">
 				<CardDataStats title="Total Balance in Dollars" totalUsd={userDataState.totalBalance} />
 				<CardDataStats

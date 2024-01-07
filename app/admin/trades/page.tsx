@@ -4,6 +4,7 @@ import Modal from "@/components/Modals/Modal";
 import UploadButton from "@/components/UploadButtons/UploadButton";
 import { useAdminContext } from "@/hooks/useAdminContext";
 import { ChangeEvent, FormEvent, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 interface UserTradeHistoriesProps {
@@ -78,6 +79,19 @@ export default function TradeHistories() {
 				console.log(error);
 			} finally {
 				setLoading((prevLoading) => ({ ...prevLoading, [tradeId]: false }));
+				toast.success("Trade Status was updated Successfully", {
+					duration: 6000,
+					position: "top-center",
+					style: {
+						padding: "8px",
+						fontWeight: "bold",
+						minWidth: "300px",
+					},
+					iconTheme: {
+						primary: "#10B981",
+						secondary: "#FFFF",
+					},
+				});
 			}
 		}, 1000);
 
@@ -86,6 +100,7 @@ export default function TradeHistories() {
 
 	return (
 		<>
+			<Toaster />
 			<Modal
 				show={showModal}
 				closeModal={closeModal}
@@ -250,7 +265,7 @@ export default function TradeHistories() {
 												userId={userHistory.userId}
 												id={userHistory.id}
 												loading={loading[userHistory.id] || false}
-												btnText="Approve"
+												btnText="Update"
 											/>
 										</td>
 									</tr>

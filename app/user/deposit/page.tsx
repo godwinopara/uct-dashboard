@@ -9,6 +9,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { FaInfoCircle, FaTimes } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
 import { storage } from "@/config/firebase";
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
 export default function Deposit() {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -69,6 +70,7 @@ export default function Deposit() {
 	};
 	return (
 		<div>
+			<Breadcrumb pageName="Deposit" />
 			<Modal modalIsOpen={notificationModalIsOpen}>
 				<div className="mt-14 md:mt-0 flex items-center justify-between mb-5 overflow-auto">
 					<h3 className="text-xl font-bold">Transaction Notification</h3>
