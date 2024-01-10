@@ -50,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				router.push("/auth/login");
 			}
 		}
-	}, [validToken]);
+	}, [validToken, router]);
 
 	return (
 		<html lang="en">

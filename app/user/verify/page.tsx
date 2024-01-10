@@ -36,6 +36,7 @@ export default function Verify() {
 			setShowCongratsUI(true);
 			setUploaded(true);
 		}
+		// eslint-disable-next-line
 	}, []);
 
 	const onDrop = useCallback(async (acceptedFiles: any) => {
@@ -149,7 +150,7 @@ export default function Verify() {
 								</div>
 							)}
 							{image && (
-								<img
+								<Image
 									src={image}
 									alt="Selected Image"
 									className="max-w-full mx-auto mb-8 max-h-48 object-cover"

@@ -77,7 +77,7 @@ const Dashboard: React.FC = () => {
 		if (!user) {
 			router.push("/auth/login");
 		}
-	}, [userDataState?.user, router]);
+	}, [userDataState?.user, user, router]);
 
 	return (
 		<>
