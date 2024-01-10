@@ -12,7 +12,7 @@ import { storage } from "@/config/firebase";
 import { FaUser } from "react-icons/fa";
 import loader from "@/public/images/icon/spinner.svg";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
 	title: "User Settings | Universal Cryptosphere Trade Dashboard",
 	description: "This is User Settings Page",
 };
@@ -28,8 +28,6 @@ const Settings = () => {
 		mobile: "",
 		country: "",
 	});
-
-	// const [profilePic, setProfilePic] = useState("");
 
 	const { userDataState, updateUser } = useUserContext();
 
