@@ -12,36 +12,46 @@ export const UserContext = createContext();
 const userReducer = (state, action) => {
 	switch (action.type) {
 		case "UPDATE_TRADING_SESSION":
-			saveToFirebase({ ...state, tradingSession: [...state.tradingSession, action.payload] });
+			saveToFirebase(
+				{ ...state, tradingSession: [...state.tradingSession, action.payload] },
+				action.user
+			);
 			return {
 				...state,
 				tradingSession: [...state.tradingSession, action.payload],
 			};
 		case "UPDATE_DEPOSIT_HISTORY":
-			saveToFirebase({ ...state, depositHistory: [...state.depositHistory, action.payload] });
+			saveToFirebase(
+				{ ...state, depositHistory: [...state.depositHistory, action.payload] },
+				action.user
+			);
 			return {
 				...state,
 				depositHistory: [...state.depositHistory, action.payload],
 			};
 		case "UPDATE_WITHDRAWAL_HISTORY":
-			saveToFirebase({ ...state, withdrawalHistory: [...state.withdrawalHistory, action.payload] });
+			saveToFirebase(
+				{ ...state, withdrawalHistory: [...state.withdrawalHistory, action.payload] },
+				action.user
+			);
 			return {
 				...state,
 				withdrawalHistory: [...state.withdrawalHistory, action.payload],
 			};
 		case "UPDATE_USER":
+			saveToFirebase({ ...state, user: { ...state.user, ...action.payload } }, action.user);
 			return {
 				...state,
 				user: { ...state.user, ...action.payload },
 			};
 		case "UPDATE_SUBSCRIPTION":
-			saveToFirebase({ ...state, subscription: { ...action.payload } });
+			saveToFirebase({ ...state, subscription: { ...action.payload } }, action.user);
 			return {
 				...state,
 				subscription: { ...action.payload },
 			};
 		case "UPDATE_VERIFICATION":
-			saveToFirebase({ ...state, verification: { ...action.payload } });
+			saveToFirebase({ ...state, verification: { ...action.payload } }, action.user);
 			return {
 				...state,
 				verification: { ...action.payload },
@@ -56,8 +66,7 @@ const userReducer = (state, action) => {
 	}
 };
 
-async function saveToFirebase(data) {
-	const { user } = useAuthContext();
+async function saveToFirebase(data, user) {
 	if (user) {
 		const userRef = doc(db, "userData", user.uid);
 		await setDoc(userRef, data);
@@ -86,31 +95,31 @@ export const UserProvider = ({ children }) => {
 	}, [user]);
 
 	const updateTradingSession = (payload) => {
-		dispatch({ type: "UPDATE_TRADING_SESSION", payload });
+		dispatch({ type: "UPDATE_TRADING_SESSION", payload, user });
 	};
 
 	const updateDepositHistory = (payload) => {
-		dispatch({ type: "UPDATE_DEPOSIT_HISTORY", payload });
+		dispatch({ type: "UPDATE_DEPOSIT_HISTORY", payload, user });
 	};
 
 	const updateWithdrawalHistory = (payload) => {
-		dispatch({ type: "UPDATE_WITHDRAWAL_HISTORY", payload });
+		dispatch({ type: "UPDATE_WITHDRAWAL_HISTORY", payload, user });
 	};
 
 	const updateUser = (payload) => {
-		dispatch({ type: "UPDATE_USER", payload });
+		dispatch({ type: "UPDATE_USER", payload, user });
 	};
 
 	const updateState = (payload) => {
-		dispatch({ type: "UPDATE_STATE", payload });
+		dispatch({ type: "UPDATE_STATE", payload, user });
 	};
 
 	const updateSubscription = (payload) => {
-		dispatch({ type: "UPDATE_SUBSCRIPTION", payload });
+		dispatch({ type: "UPDATE_SUBSCRIPTION", payload, user });
 	};
 
 	const updateVerification = (payload) => {
-		dispatch({ type: "UPDATE_VERIFICATION", payload });
+		dispatch({ type: "UPDATE_VERIFICATION", payload, user });
 	};
 
 	return (

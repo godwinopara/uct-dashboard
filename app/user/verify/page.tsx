@@ -11,6 +11,7 @@ import Image from "next/image";
 import ConfettiExplosion from "react-confetti-explosion";
 import { MdVerified } from "react-icons/md";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 export default function Verify() {
 	const [image, setImage] = useState<string | null>(null);
@@ -20,6 +21,7 @@ export default function Verify() {
 	const [showCongratsUI, setShowCongratsUI] = useState(false);
 
 	const { updateVerification, userDataState } = useUserContext();
+	const { user } = useAuthContext();
 
 	useEffect(() => {
 		if (userDataState.verification?.status) {
@@ -54,10 +56,12 @@ export default function Verify() {
 
 	const handleImageUpload = async (e: React.FormEvent) => {
 		e.preventDefault();
-		updateVerification({ document: image, status: "Pending", date: new Date().toDateString() });
-		setImage(null);
-		setUploaded(true);
-		setVerificationStatus("Pending");
+		if (user) {
+			updateVerification({ document: image, status: "Pending", date: new Date().toDateString() });
+			setImage(null);
+			setUploaded(true);
+			setVerificationStatus("Pending");
+		}
 	};
 
 	return (

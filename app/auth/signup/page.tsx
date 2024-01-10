@@ -68,6 +68,7 @@ export default function Signup() {
 					userId: signup.user.uid,
 					subscription: {},
 					verification: {},
+					imgUrl: "",
 					user: {
 						firstname: formData.firstname[0].toUpperCase() + formData.firstname.slice(1),
 						lastname: formData.lastname[0].toUpperCase() + formData.lastname.slice(1),

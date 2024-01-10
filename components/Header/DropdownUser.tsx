@@ -4,9 +4,12 @@ import Image from "next/image";
 import { useUserContext } from "@/hooks/useUserContext";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useRouter } from "next/navigation";
+import { FaUser } from "react-icons/fa";
 
 const DropdownUser = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const [userImage, setUserImage] = useState("");
+	const [verificationStatus, setVerificationStatus] = useState("Not Verified");
 	const router = useRouter();
 
 	const { userDataState } = useUserContext();
@@ -43,6 +46,15 @@ const DropdownUser = () => {
 		return () => document.removeEventListener("keydown", keyHandler);
 	});
 
+	useEffect(() => {
+		if (userDataState?.user) {
+			setUserImage(userDataState.user.imgUrl);
+		}
+		if (userDataState?.verification) {
+			setVerificationStatus(userDataState.verification.status);
+		}
+	}, [userDataState]);
+
 	return (
 		<div className="relative">
 			<Link
@@ -51,14 +63,27 @@ const DropdownUser = () => {
 				className="flex items-center gap-4"
 				href="#"
 			>
+				<p
+					className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
+						verificationStatus === "Verified"
+							? "text-success bg-success"
+							: "text-warning bg-warning"
+					}`}
+				>
+					{verificationStatus}
+				</p>
 				<span className="hidden text-right lg:block">
 					<span className="block  font-medium text-black dark:text-white">
 						{userDataState?.user?.firstname} {userDataState?.user?.lastname}
 					</span>
 				</span>
 
-				<span className="h-12 w-12 rounded-full">
-					<Image width={112} height={112} src={"/images/user/user.svg"} alt="User" />
+				<span className="relative h-12 w-12 rounded-[100%] bg-boxdark-2 flex items-center justify-center text-2xl ">
+					{userImage ? (
+						<Image src={userImage} className="rounded-[100%]" fill alt="user profie picture" />
+					) : (
+						<FaUser />
+					)}
 				</span>
 
 				<svg
@@ -88,7 +113,7 @@ const DropdownUser = () => {
 				}`}
 			>
 				<ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
-					<li>
+					{/* <li>
 						<Link
 							href="/user/profile"
 							className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-meta-3 lg:text-base"
@@ -112,7 +137,7 @@ const DropdownUser = () => {
 							</svg>
 							My Profile
 						</Link>
-					</li>
+					</li> */}
 
 					<li>
 						<Link

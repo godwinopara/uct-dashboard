@@ -95,7 +95,7 @@ const DropdownAdmin = () => {
 				}`}
 			>
 				<ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
-					<li>
+					{/* <li>
 						<Link
 							href="/user/profile"
 							className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-meta-3 lg:text-base"
@@ -119,7 +119,7 @@ const DropdownAdmin = () => {
 							</svg>
 							My Profile
 						</Link>
-					</li>
+					</li> */}
 
 					<li>
 						<Link

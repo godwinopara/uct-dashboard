@@ -2,7 +2,7 @@ export type Trade = {
 	tradeOption: string;
 	pairs: string;
 	tradeType: string;
-	amount: number;
+	entry: string;
 	lotSize: string;
 	takeProfit: number;
 	stopLoss: number;

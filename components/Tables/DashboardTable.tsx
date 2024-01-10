@@ -23,7 +23,7 @@ const DashboardTable = () => {
 										Pair
 									</th>
 									<th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-										Amount
+										Entry
 									</th>
 									<th className="min-w-[100px] py-4 px-4 font-medium text-black dark:text-white">
 										Size
@@ -57,7 +57,7 @@ const DashboardTable = () => {
 											<h5 className="font-medium text-black dark:text-white">{tradeItem.pairs}</h5>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p className="text-black dark:text-white">${tradeItem.amount}</p>
+											<p className="text-black dark:text-white">${tradeItem.entry}</p>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<p className="text-black dark:text-white">{tradeItem.lotSize}</p>

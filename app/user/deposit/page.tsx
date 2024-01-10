@@ -10,10 +10,11 @@ import { FaInfoCircle, FaTimes } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
 import { storage } from "@/config/firebase";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Deposit() {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
-	const [notificationModalIsOpen, setNotificationModalIsOpen] = useState(false);
 	const [formData, setFormData] = useState<FormData>({
 		paymentMethod: "",
 		amount: "",
@@ -21,6 +22,7 @@ export default function Deposit() {
 	});
 
 	const { updateDepositHistory } = useUserContext();
+	const { user } = useAuthContext();
 
 	const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		const { name, value } = e.target;
@@ -46,10 +48,6 @@ export default function Deposit() {
 		setModalIsOpen(false);
 	};
 
-	const closeNotificationModal = () => {
-		setNotificationModalIsOpen(false);
-	};
-
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
@@ -62,34 +60,28 @@ export default function Deposit() {
 			date: new Date().toDateString(),
 		};
 
-		if (formData.paymentReceipt) {
+		if (formData.paymentReceipt && user) {
 			updateDepositHistory(payload);
 			closeModal();
-			setNotificationModalIsOpen(true);
+			toast.success("You Deposit has been received. You will receive a confirmation via email!", {
+				duration: 6000,
+				position: "top-center",
+				style: {
+					padding: "8px",
+					fontWeight: "bold",
+					minWidth: "300px",
+				},
+				iconTheme: {
+					primary: "#10B981",
+					secondary: "#FFFF",
+				},
+			});
 		}
 	};
 	return (
 		<div>
+			<Toaster />
 			<Breadcrumb pageName="Deposit" />
-			<Modal modalIsOpen={notificationModalIsOpen}>
-				<div className="mt-14 md:mt-0 flex items-center justify-between mb-5 overflow-auto">
-					<h3 className="text-xl font-bold">Transaction Notification</h3>
-					<button
-						className="dark:text-white text-xl border border-black"
-						onClick={closeNotificationModal}
-					>
-						<FaTimes />
-					</button>
-				</div>
-				<div className="flex items-center gap-x-5">
-					<div className="text-3xl text-meta-3">
-						<FaInfoCircle />
-					</div>
-					<p className="text-meta-3 text-lg">
-						You Deposit has been received. You will receive a confirmation via email!
-					</p>
-				</div>
-			</Modal>
 			<Modal modalIsOpen={modalIsOpen}>
 				<div className="mt-14 md:mt-0 flex items-center justify-between mb-5 overflow-auto">
 					<h3 className="text-xl font-bold">Submit Notification for Deposit</h3>

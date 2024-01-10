@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import DashboardTable from "@/components/Tables/DashboardTable";
 import { v4 as uuidv4 } from "uuid";
+import toast, { Toaster } from "react-hot-toast";
 
 const Dashboard: React.FC = () => {
 	const [tradeOption, setTradeOption] = useState("");
@@ -43,8 +44,33 @@ const Dashboard: React.FC = () => {
 			date: new Date().toDateString(),
 			id: uuidv4(),
 		};
+		if (user) {
+			updateTradingSession(tradingSession, user);
+			setTradeOption("");
+			setTradeType("");
+			setPairs("");
+			setAmount(0);
+			setLotSize("");
+			setTakeProfit("");
+			setStopLoss("");
 
-		updateTradingSession(tradingSession);
+			toast.success(
+				"Your Trade has been Placed Successfully, Keep track of your trade session below",
+				{
+					duration: 6000,
+					position: "top-center",
+					style: {
+						padding: "8px",
+						fontWeight: "bold",
+						minWidth: "350px",
+					},
+					iconTheme: {
+						primary: "#10B981",
+						secondary: "#FFFF",
+					},
+				}
+			);
+		}
 	};
 
 	useEffect(() => {
@@ -55,6 +81,7 @@ const Dashboard: React.FC = () => {
 
 	return (
 		<>
+			<Toaster />
 			<div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
 				<CardDataStats
 					title="Total Balance"

@@ -1,6 +1,7 @@
 "use client";
 
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { useUserContext } from "@/hooks/useUserContext";
 import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
@@ -12,17 +13,22 @@ export default function Subscription() {
 	});
 
 	const { updateSubscription, userDataState } = useUserContext();
+	const { user } = useAuthContext();
 
 	useEffect(() => {
-		if (userDataState.subscription.plan) {
-			const { plan, amount } = userDataState.subscription;
-			setSelectedPlan({ plan, amount });
+		if (userDataState.subscription) {
+			if (userDataState?.subscription.plan) {
+				const { plan, amount } = userDataState.subscription;
+				setSelectedPlan({ plan, amount });
+			}
 		}
-	}, []);
+	}, [userDataState]);
 
 	const subscribe = (plan: string, amount: number) => {
-		setSelectedPlan({ plan, amount });
-		updateSubscription({ plan, amount, duration: 7, date: new Date().toDateString() });
+		if (user) {
+			setSelectedPlan({ plan, amount });
+			updateSubscription({ plan, amount, duration: 7, date: new Date().toDateString() });
+		}
 	};
 
 	return (

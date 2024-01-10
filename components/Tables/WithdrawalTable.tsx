@@ -1,8 +1,13 @@
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { useUserContext } from "@/hooks/useUserContext";
 import { Deposit } from "@/types/deposit";
 
 export default function WithdrawalTable() {
 	const { userDataState } = useUserContext();
+
+	if (!userDataState.withdrawalHistory) {
+		return null;
+	}
 
 	return (
 		<>

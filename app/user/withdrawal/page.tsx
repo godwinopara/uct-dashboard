@@ -5,6 +5,7 @@ import CardDataStats from "@/components/CardDataStats";
 import WithdrawalTable from "@/components/Tables/WithdrawalTable";
 import Modal from "@/components/modal/Modal";
 import { useAppContext } from "@/hooks/useAppContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { useUserContext } from "@/hooks/useUserContext";
 import { ChangeEvent, FormEvent, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
@@ -16,6 +17,7 @@ export default function Withdrawal() {
 
 	const { state } = useAppContext();
 	const { userDataState, updateWithdrawalHistory } = useUserContext();
+	const { user } = useAuthContext();
 
 	const [formData, setFormData] = useState({
 		paymentMethod: "",
@@ -44,38 +46,33 @@ export default function Withdrawal() {
 			id: uuidv4(),
 		};
 
-		updateWithdrawalHistory(payload);
-
-		toast.success(
-			"You withdrawal request has been received. You will receive a confirmation via email!",
-			{
-				duration: 6000,
-				position: "top-right",
-				style: {
-					padding: "16px",
-					fontWeight: "bold",
-					minWidth: "400px",
-				},
-				iconTheme: {
-					primary: "#10B981",
-					secondary: "#FFFF",
-				},
-			}
-		);
-
-		//
-		setFormData({
-			paymentMethod: "",
-			amount: "",
-			walletAddress: "",
-			bankName: "",
-			accountName: "",
-			accountNumber: "",
-		});
-	};
-
-	const closeModal = () => {
-		setModalIsOpen(false);
+		if (user) {
+			updateWithdrawalHistory(payload);
+			toast.success(
+				"You withdrawal request has been received. You will receive a confirmation via email!",
+				{
+					duration: 6000,
+					position: "top-center",
+					style: {
+						padding: "16px",
+						fontWeight: "bold",
+						minWidth: "400px",
+					},
+					iconTheme: {
+						primary: "#10B981",
+						secondary: "#FFFF",
+					},
+				}
+			);
+			setFormData({
+				paymentMethod: "",
+				amount: "",
+				walletAddress: "",
+				bankName: "",
+				accountName: "",
+				accountNumber: "",
+			});
+		}
 	};
 
 	return (
