@@ -9,6 +9,8 @@ import authImg from "public/images/auth/auth-screens.png";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useAuthContext } from "@/hooks/useAuthContext";
 
+import loader from "@/public/images/icon/spinner.svg";
+
 import { useRouter } from "next/navigation";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
@@ -22,6 +24,9 @@ interface Country {
 export default function Signup() {
 	const [countries, setCountries] = useState<Country[] | null>(null);
 	const [error, setError] = useState<string | null>(null);
+
+	const [loading, setLoading] = useState(false);
+
 	const [formData, setFormData] = useState({
 		firstname: "",
 		lastname: "",
@@ -48,9 +53,11 @@ export default function Signup() {
 
 	const handleSubmitSignUp = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setLoading(true);
 
 		if (formData.password !== formData.confirmPassword) {
 			setError("Password Mismatch: Password and Confirm Password not the same");
+			setLoading(false);
 			return;
 		}
 
@@ -76,7 +83,7 @@ export default function Signup() {
 						password: formData.password,
 						country: formData.country,
 						mobile: formData.mobile,
-						status: "Active",
+						status: "Pending",
 						username: formData.username,
 						gender: formData.gender,
 						joinedDate: new Date().toDateString(),
@@ -94,6 +101,7 @@ export default function Signup() {
 					password: "",
 					confirmPassword: "",
 				});
+				setLoading(false);
 				localStorage.setItem("userToken", JSON.stringify(signup.user.stsTokenManager));
 				router.push("/user");
 			}
@@ -306,11 +314,21 @@ export default function Signup() {
 								</div>
 
 								<div className="mb-5">
-									<input
+									<button
 										type="submit"
-										value="Create Account"
-										className="w-full cursor-pointer rounded-lg border border-meta-3 bg-meta-3 p-4 text-white transition hover:bg-opacity-90"
-									/>
+										className="flex justify-center items-center gap-x-2 w-full cursor-pointer rounded-lg border border-meta-3 bg-meta-3 p-4 text-white transition hover:bg-opacity-90"
+									>
+										Create Account
+										{loading && (
+											<Image
+												className="border"
+												src={loader}
+												alt="loading icon"
+												height={20}
+												width={20}
+											/>
+										)}
+									</button>
 								</div>
 
 								<button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50">

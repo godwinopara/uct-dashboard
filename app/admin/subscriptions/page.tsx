@@ -51,7 +51,7 @@ export default function Subscriptions() {
 					style: {
 						padding: "8px",
 						fontWeight: "bold",
-						minWidth: "300px",
+						minWidth: "350px",
 					},
 					iconTheme: {
 						primary: "#10B981",

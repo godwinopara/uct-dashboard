@@ -4,12 +4,15 @@ import Image from "next/image";
 import logo from "public/images/logo/logo-green.svg";
 import authImg from "public/images/auth/auth-screens.png";
 
+import loader from "@/public/images/icon/spinner.svg";
+
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const Login = () => {
 	const [formData, setFormData] = useState({ email: "", password: "" });
+	const [loading, setLoading] = useState(false);
 	const router = useRouter();
 
 	const { login, signInWithGoogle } = useAuthContext();
@@ -24,9 +27,11 @@ const Login = () => {
 
 	const handleSubmitLogin = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setLoading(true);
 		try {
 			const userIsValid = await login(formData.email, formData.password);
 			if (userIsValid) {
+				setLoading(false);
 				localStorage.setItem("userToken", JSON.stringify(userIsValid.user.stsTokenManager));
 				router.push("/user");
 			}
@@ -149,11 +154,21 @@ const Login = () => {
 								</div>
 
 								<div className="mb-5">
-									<input
+									<button
 										type="submit"
-										value="Sign In"
-										className="w-full cursor-pointer rounded-lg border border-meta-3 bg-meta-3 p-4 text-white transition hover:bg-opacity-90"
-									/>
+										className="flex justify-center items-center gap-x-2 w-full cursor-pointer rounded-lg border border-meta-3 bg-meta-3 p-4 text-white transition hover:bg-opacity-90"
+									>
+										Sign In
+										{loading && (
+											<Image
+												className="border"
+												src={loader}
+												alt="loading icon"
+												height={20}
+												width={20}
+											/>
+										)}
+									</button>
 								</div>
 							</form>
 
@@ -199,7 +214,7 @@ const Login = () => {
 
 							<div className="mt-6 text-center">
 								<p>
-									Don’t have any account? {"  "}
+									Don’t have any account?{" "}
 									<Link href="/auth/signup" className="text-meta-3">
 										Sign Up
 									</Link>

@@ -75,10 +75,8 @@ const DashboardTable = () => {
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<p
 												className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-													tradeItem.status === "Paid"
+													tradeItem.status === "Win"
 														? "text-success bg-success"
-														: tradeItem.status === "Unpaid"
-														? "text-danger bg-danger"
 														: "text-warning bg-warning"
 												}`}
 											>

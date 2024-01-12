@@ -10,7 +10,7 @@ export default function Admin() {
 	const { usersData } = useAdminContext();
 
 	return (
-		<section className="grid grid-cols-4 gap-x-5">
+		<section className="grid gap-y-8 xl:gap-y-0 xl:grid-cols-4  xl:gap-x-5">
 			<DashboardCard img={<FaUsers />} title="Active Users" total={usersData.length} />
 			<DashboardCard img={<FaUsers />} title="Blocked Users" total="1" />
 			<DashboardCard img={<FaIdCard />} title="Pending Verification" total="1" />

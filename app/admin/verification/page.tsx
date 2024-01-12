@@ -2,8 +2,6 @@
 
 import React, { useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
-// import { usersData } from "@/components/data/data";
-import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { useAdminContext } from "@/hooks/useAdminContext";
 import { FaRegEyeSlash } from "react-icons/fa6";
 import Modal from "@/components/Modals/Modal";
@@ -30,7 +28,7 @@ export default function Verification() {
 		}
 	});
 
-	const handlePreviewImg = (img: string, date: string) => {
+	const handlePreviewImg = (img: string) => {
 		setShowModal(true);
 		if (img) {
 			setViewImg(img);
@@ -128,7 +126,7 @@ export default function Verification() {
 
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<button
-												onClick={() => handlePreviewImg(userItem.document, userItem.date)}
+												onClick={() => handlePreviewImg(userItem.document)}
 												className="w-[110px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-1"
 											>
 												Preview <FaRegEyeSlash />

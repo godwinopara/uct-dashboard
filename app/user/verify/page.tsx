@@ -153,6 +153,8 @@ export default function Verify() {
 								<Image
 									src={image}
 									alt="Selected Image"
+									height={300}
+									width={300}
 									className="max-w-full mx-auto mb-8 max-h-48 object-cover"
 								/>
 							)}

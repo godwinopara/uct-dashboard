@@ -1,20 +1,22 @@
 "use client";
 
 import React, { ChangeEvent, FormEvent, ReactNode, useEffect, useState } from "react";
-import { FaWallet } from "react-icons/fa";
 import { MdDeleteForever, MdLogin } from "react-icons/md";
-import { ImBlocked } from "react-icons/im";
 import { useAdminContext } from "@/hooks/useAdminContext";
 import Modal from "@/components/Modals/Modal";
 import UploadButton2 from "@/components/UploadButtons/UploadButton2";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function Users() {
-	const { usersData, updateUserData } = useAdminContext();
 	const [currentUserId, setCurrentUserId] = useState<any>("");
 	const [showModal, setShowModal] = useState(false);
 	const [userInput, setUserInput] = useState("");
 	const [loading, setLoading] = useState<{ [currentUserId: string]: boolean }>({});
+
+	const [allowDeleteUser, setAllowDeleteUser] = useState(false);
+	const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
+
+	const { usersData, updateUserData, deleteUser } = useAdminContext();
 
 	const handleBillUser = (user: any) => {
 		setShowModal(true);
@@ -23,6 +25,7 @@ export default function Users() {
 
 	const closeModal = () => {
 		setShowModal(false);
+		setShowDeleteUserModal(false);
 	};
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -58,9 +61,92 @@ export default function Users() {
 		setUserInput(e.target.value);
 	};
 
+	const handleDeleteUser = (userId: string) => {
+		setShowDeleteUserModal(true);
+		setCurrentUserId(userId);
+
+		console.log(userId, "===userid");
+
+		// if (!window.confirm(`Are you sure to delete this account?`)) return;
+		// if (userId) {
+		// 	deleteUser(userId);
+		// 	toast.success(`User was deleted successfully`, {
+		// 		duration: 6000,
+		// 		position: "top-center",
+		// 		style: {
+		// 			padding: "16px",
+		// 			fontWeight: "bold",
+		// 			minWidth: "300px",
+		// 		},
+		// 		iconTheme: {
+		// 			primary: "#10B981",
+		// 			secondary: "#FFFF",
+		// 		},
+		// 	});
+		// }
+	};
+
+	const handleAllowDeleteUser = () => {
+		setAllowDeleteUser(true);
+
+		setTimeout(() => {
+			if (!currentUserId && !allowDeleteUser) {
+				return;
+			}
+			try {
+				deleteUser(currentUserId);
+				toast.success("Account was deleted Successfully", {
+					duration: 6000,
+					position: "top-center",
+					style: {
+						padding: "8px",
+						fontWeight: "bold",
+						minWidth: "350px",
+					},
+					iconTheme: {
+						primary: "#10B981",
+						secondary: "#FFFF",
+					},
+				});
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setShowDeleteUserModal(false);
+			}
+		}, 1000);
+	};
+
 	return (
 		<>
 			<Toaster />
+			<Modal
+				show={showDeleteUserModal}
+				closeModal={closeModal}
+				title="Delete User"
+				height={270}
+				width={400}
+			>
+				<div className="flex text-center items-center justify-center">
+					<div>
+						<h2 className="text-xl">Are you sure you want to this Account</h2>
+						<div className="flex justify-center gap-x-4 mt-8">
+							<button
+								onClick={handleAllowDeleteUser}
+								className="bg-meta-3 flex justify-center items-center text-white rounded-md font-medium px-8 py-2"
+								type="submit"
+							>
+								Yes
+							</button>
+							<button
+								onClick={closeModal}
+								className="bg-danger flex justify-center items-center text-white rounded-md font-medium px-8 py-2"
+							>
+								No
+							</button>
+						</div>
+					</div>
+				</div>
+			</Modal>
 			<Modal show={showModal} closeModal={closeModal} title="Bill User" height={270} width={400}>
 				<form onSubmit={handleSubmit}>
 					<div className="w-full relative z-20 bg-transparent mb-4">
@@ -191,15 +277,18 @@ export default function Users() {
 												loading={loading[userItem.userId] || false}
 												btnText="Bill User"
 											/>
-											<button className="w-[100px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2">
+											{/* <button className="w-[100px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2">
 												<MdLogin />
 												Login
-											</button>
-											<button className="w-[100px] rounded-md  bg-warning text-white py-2 px-3 flex items-center justify-center  gap-x-2">
+											</button> */}
+											{/* <button className="w-[100px] rounded-md  bg-warning text-white py-2 px-3 flex items-center justify-center  gap-x-2">
 												<ImBlocked />
 												Block
-											</button>
-											<button className="w-[100px] rounded-md  bg-danger text-white py-2 px-3 flex items-center justify-center  gap-x-2">
+											</button> */}
+											<button
+												onClick={() => handleDeleteUser(userItem.userId)}
+												className="w-[100px] rounded-md  bg-danger text-white py-2 px-3 flex items-center justify-center  gap-x-2"
+											>
 												<MdDeleteForever />
 												Delete
 											</button>

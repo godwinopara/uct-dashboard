@@ -26,10 +26,6 @@ export default function Account() {
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		// if (userId) {
-		// 	updateBalance(userId, accountInput);
-		// 	closeModal();
-		// }
 
 		setLoading((prevLoading) => ({ ...prevLoading, [userId]: true }));
 

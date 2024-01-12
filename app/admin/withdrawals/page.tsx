@@ -4,6 +4,8 @@ import { MdDeleteForever } from "react-icons/md";
 import { useAdminContext } from "@/hooks/useAdminContext";
 import { useState } from "react";
 import UploadButton from "@/components/UploadButtons/UploadButton";
+import Modal from "@/components/Modals/Modal";
+import toast, { Toaster } from "react-hot-toast";
 
 interface UserHistoryProps {
 	amount: number;
@@ -17,7 +19,10 @@ interface UserHistoryProps {
 
 export default function Withdrawals() {
 	const [loading, setLoading] = useState<{ [id: string]: boolean }>({});
-	const { usersData, updateWithdrawal } = useAdminContext();
+	const { usersData, updateWithdrawal, removeWithdrawal } = useAdminContext();
+	const [userId, setUserId] = useState<string | null>(null);
+	const [depositId, setDepositId] = useState<string | null>(null);
+	const [showModal, setShowModal] = useState(false);
 
 	const history: any = [];
 
@@ -47,8 +52,75 @@ export default function Withdrawals() {
 		}, 500);
 	};
 
+	const closeModal = () => {
+		setShowModal(false);
+	};
+
+	const showDeleteWithdrawalModal = (userId: string, depositId: string) => {
+		setUserId(userId);
+		setDepositId(depositId);
+		setShowModal(true);
+	};
+
+	const handleRemoveWithdrawal = () => {
+		setTimeout(() => {
+			if (!userId) {
+				return;
+			}
+			try {
+				removeWithdrawal(userId, depositId);
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setShowModal(false);
+				toast.success("Deposit was deleted Successfully", {
+					duration: 6000,
+					position: "top-center",
+					style: {
+						padding: "8px",
+						fontWeight: "bold",
+						minWidth: "350px",
+					},
+					iconTheme: {
+						primary: "#10B981",
+						secondary: "#FFFF",
+					},
+				});
+			}
+		}, 1000);
+	};
+
 	return (
 		<>
+			<Toaster />
+			<Modal
+				show={showModal}
+				closeModal={closeModal}
+				title="Delete Deposit"
+				height={270}
+				width={400}
+			>
+				<div className="flex text-center items-center justify-center">
+					<div>
+						<h2 className="text-xl">Are you sure you want to delete this Withdrawal.</h2>
+						<div className="flex justify-center gap-x-4 mt-8">
+							<button
+								onClick={handleRemoveWithdrawal}
+								className="bg-meta-3 flex justify-center items-center text-white rounded-md font-medium px-8 py-2"
+								type="submit"
+							>
+								Yes
+							</button>
+							<button
+								onClick={closeModal}
+								className="bg-danger flex justify-center items-center text-white rounded-md font-medium px-8 py-2"
+							>
+								No
+							</button>
+						</div>
+					</div>
+				</div>
+			</Modal>
 			{usersData?.length > 0 && (
 				<div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
 					<h2 className="font-bold text-xl mb-5">ALL USERS WITHDRAWALS</h2>
@@ -123,7 +195,12 @@ export default function Withdrawals() {
 													loading={loading[userHistory.id] || false}
 													btnText="Approve"
 												/>
-												<button className="w-[110px] rounded-md  bg-danger text-white py-2 px-3 flex items-center justify-center  gap-x-2">
+												<button
+													onClick={() =>
+														showDeleteWithdrawalModal(userHistory.userId, userHistory.id)
+													}
+													className="w-[110px] rounded-md  bg-danger text-white py-2 px-3 flex items-center justify-center  gap-x-2"
+												>
 													<MdDeleteForever />
 													Remove
 												</button>

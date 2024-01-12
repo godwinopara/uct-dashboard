@@ -11,6 +11,7 @@ import {
 	FaMoneyCheckAlt,
 	FaServer,
 } from "react-icons/fa";
+import { useUserContext } from "@/hooks/useUserContext";
 
 interface SidebarProps {
 	sidebarOpen: boolean;
@@ -18,15 +19,29 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+	const [status, setStatus] = useState(null);
+
 	const pathname = usePathname();
 
 	const trigger = useRef<any>(null);
 	const sidebar = useRef<any>(null);
 
+	const { userDataState } = useUserContext();
+
 	let storedSidebarExpanded = "true";
 	const [sidebarExpanded, setSidebarExpanded] = useState(
 		storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
 	);
+
+	useEffect(() => {
+		setTimeout(() => {
+			if (userDataState) {
+				setStatus(userDataState?.user.status);
+			}
+		}, 1000);
+
+		console.log(userDataState.user);
+	}, [userDataState]);
 
 	// close on click outside
 	useEffect(() => {
@@ -120,18 +135,19 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 							{/* <!-- Menu Item Dashboard --> */}
 
 							{/* ----- Assets Items Dashboard ------  */}
-
-							<li>
-								<Link
-									href="/user/assets"
-									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-										pathname.includes("assets") && "bg-graydark dark:bg-meta-4"
-									}`}
-								>
-									<FaCompactDisc />
-									Assets
-								</Link>
-							</li>
+							{status === "Active" && (
+								<li>
+									<Link
+										href="/user/assets"
+										className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+											pathname.includes("assets") && "bg-graydark dark:bg-meta-4"
+										}`}
+									>
+										<FaCompactDisc />
+										Assets
+									</Link>
+								</li>
+							)}
 
 							{/* ----- Assets Items Dashboard ------  */}
 
@@ -151,17 +167,19 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 							{/* ----- Deposit Items Dashboard ------  */}
 
 							{/* ----- Withdrawal Items Dashboard ------  */}
-							<li>
-								<Link
-									href="/user/withdrawal"
-									className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-										pathname.includes("withdrawal") && "bg-graydark dark:bg-meta-4"
-									}`}
-								>
-									<FaMoneyCheckAlt />
-									Withdrawal
-								</Link>
-							</li>
+							{status === "Active" && (
+								<li>
+									<Link
+										href="/user/withdrawal"
+										className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+											pathname.includes("withdrawal") && "bg-graydark dark:bg-meta-4"
+										}`}
+									>
+										<FaMoneyCheckAlt />
+										Withdrawal
+									</Link>
+								</li>
+							)}
 
 							{/* ----- Withdrawal Items Dashboard ------  */}
 

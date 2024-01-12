@@ -1,7 +1,7 @@
 "use client";
 
 import { db } from "@/config/firebase";
-import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { createContext, useEffect, useReducer, useState } from "react";
 
 export const AdminContext = createContext();
@@ -55,8 +55,9 @@ export const AdminProvider = ({ children }) => {
 		const docSnap = await getDoc(docRef);
 
 		if (docSnap) {
-			let trades = [];
-			trades = docSnap.data().tradingSession;
+			let totalProfit = `${Number(docSnap.data().totalProfit) + Number(userInput.profit)}`;
+			let trades = docSnap.data().tradingSession;
+
 			trades.forEach((trade) => {
 				if (trade.id === tradeId) {
 					trade.profit = userInput.profit;
@@ -66,6 +67,7 @@ export const AdminProvider = ({ children }) => {
 
 			await updateDoc(docRef, {
 				tradingSession: trades,
+				totalProfit: totalProfit,
 			});
 
 			setRefresh((prev) => prev + 1);
@@ -128,7 +130,6 @@ export const AdminProvider = ({ children }) => {
 	const updateVerification = async (userId) => {
 		const docRef = doc(db, "userData", userId);
 		const docSnap = await getDoc(docRef);
-		console.log(docSnap.data().verification);
 
 		await updateDoc(docRef, {
 			verification: {
@@ -137,6 +138,53 @@ export const AdminProvider = ({ children }) => {
 			},
 		});
 		setRefresh((prev) => prev + 1);
+	};
+
+	const deleteUser = async (userId) => {
+		const docRef = doc(db, "userData", userId);
+		await deleteDoc(docRef);
+		setRefresh((prev) => prev + 1);
+	};
+
+	const removeDeposit = async (userId, depositId) => {
+		const docRef = doc(db, "userData", userId);
+		const docSnap = await getDoc(docRef);
+
+		if (docSnap) {
+			const deposits = docSnap.data()?.depositHistory;
+			const filteredDeposit = [];
+			deposits.forEach((deposit) => {
+				if (deposit.id !== depositId) {
+					filteredDeposit.push(deposit);
+				}
+			});
+			await updateDoc(docRef, {
+				depositHistory: filteredDeposit,
+			});
+
+			setRefresh((prev) => prev + 1);
+		}
+	};
+
+	const removeWithdrawal = async (userId, withdrawalId) => {
+		const docRef = doc(db, "userData", userId);
+		const docSnap = await getDoc(docRef);
+
+		if (docSnap) {
+			let withdrawals = docSnap.data().withdrawalHistory;
+			let filteredWithdrawal = [];
+			withdrawals.forEach((withdrawal) => {
+				if (withdrawal.id !== withdrawalId) {
+					filteredWithdrawal.push(withdrawal);
+				}
+			});
+
+			await updateDoc(docRef, {
+				withdrawalHistory: filteredWithdrawal,
+			});
+
+			setRefresh((prev) => prev + 1);
+		}
 	};
 
 	return (
@@ -150,6 +198,9 @@ export const AdminProvider = ({ children }) => {
 				updateWithdrawal,
 				updateSubscription,
 				updateVerification,
+				deleteUser,
+				removeDeposit,
+				removeWithdrawal,
 			}}
 		>
 			{children}
