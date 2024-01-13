@@ -1,11 +1,10 @@
 "use client";
 
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { FaWallet } from "react-icons/fa";
 import { useAdminContext } from "@/hooks/useAdminContext";
 import Modal from "@/components/Modals/Modal";
-import UploadButton2 from "@/components/UploadButtons/UploadButton2";
 import toast, { Toaster } from "react-hot-toast";
+import UploadButton3 from "@/components/UploadButtons/UploadButton3";
 
 export default function Account() {
 	const { usersData, updateBalance } = useAdminContext();
@@ -55,9 +54,12 @@ export default function Account() {
 		closeModal();
 	};
 
-	const handleClickToggleModal = (user: any) => {
+	const handleClickToggleModal = (user: any, balance: string, profit: string, bonus: string) => {
 		setShowModal(true);
 		setUserId(user);
+		setAccountInput((prev) => {
+			return { ...prev, balance, profit, bonus };
+		});
 	};
 
 	return (
@@ -78,6 +80,7 @@ export default function Account() {
 								type="text"
 								name="balance"
 								required
+								value={accountInput.balance}
 								onChange={handleInputChange}
 								placeholder="Balance"
 								className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none"
@@ -91,6 +94,7 @@ export default function Account() {
 								type="text"
 								name="profit"
 								required
+								value={accountInput.profit}
 								onChange={handleInputChange}
 								placeholder="Profit"
 								className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none"
@@ -104,6 +108,7 @@ export default function Account() {
 								type="text"
 								name="bonus"
 								required
+								value={accountInput.bonus}
 								onChange={handleInputChange}
 								placeholder="Bonus"
 								className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none"
@@ -176,11 +181,14 @@ export default function Account() {
 										</td>
 
 										<td className="border-b border-[#eee] py-5 px-4 flex items-center gap-x-2 dark:border-strokedark">
-											<UploadButton2
+											<UploadButton3
 												approveBtnClick={handleClickToggleModal}
 												userId={userItem.userId}
 												loading={loading[userItem.userId] || false}
 												btnText="Update Account"
+												balance={userItem.totalBalance}
+												profit={userItem.totalProfit}
+												bonus={userItem.totalBonus}
 											/>
 										</td>
 									</tr>

@@ -39,8 +39,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 				setStatus(userDataState?.user.status);
 			}
 		}, 1000);
-
-		console.log(userDataState.user);
 	}, [userDataState]);
 
 	// close on click outside

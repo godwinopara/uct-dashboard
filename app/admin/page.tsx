@@ -9,12 +9,33 @@ import { SlWallet } from "react-icons/sl";
 export default function Admin() {
 	const { usersData } = useAdminContext();
 
+	const verifications: any = [];
+	const withdrawalHistory: any = [];
+
+	usersData.forEach((data: any) => {
+		if (data.verification?.document) {
+			verifications.push(data);
+		}
+
+		data.withdrawalHistory.forEach((hist: any) => {
+			withdrawalHistory.push(hist);
+		});
+	});
+
+	// usersData.forEach((data: any) => {
+
+	// });
+
 	return (
-		<section className="grid gap-y-8 xl:gap-y-0 xl:grid-cols-4  xl:gap-x-5">
+		<section className="grid gap-y-8 xl:gap-y-0 xl:grid-cols-3  xl:gap-x-5">
 			<DashboardCard img={<FaUsers />} title="Active Users" total={usersData.length} />
-			<DashboardCard img={<FaUsers />} title="Blocked Users" total="1" />
-			<DashboardCard img={<FaIdCard />} title="Pending Verification" total="1" />
-			<DashboardCard img={<SlWallet />} title="Pending Withdrawal" total="67" />
+			{/* <DashboardCard img={<FaUsers />} title="Blocked Users" total="1" /> */}
+			<DashboardCard img={<FaIdCard />} title="Pending Verification" total={verifications.length} />
+			<DashboardCard
+				img={<SlWallet />}
+				title="Pending Withdrawal"
+				total={withdrawalHistory.length}
+			/>
 		</section>
 	);
 }

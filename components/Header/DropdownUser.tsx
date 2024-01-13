@@ -50,6 +50,12 @@ const DropdownUser = () => {
 		if (userDataState?.user) {
 			setUserImage(userDataState.user.imgUrl);
 		}
+
+		if (userDataState?.verification.status === "Pending") {
+			setVerificationStatus("Verification Pending");
+			return;
+		}
+
 		if (userDataState?.verification) {
 			setVerificationStatus(userDataState.verification.status);
 		}
