@@ -151,7 +151,7 @@ export default function Deposit() {
 							<input
 								type="text"
 								readOnly
-								value="1A1zP1eP5QGefi2DMPVsLCrSVfgCv"
+								value="1PLV287ahVqXWpC8trTefUgzsDzwjiRANz"
 								className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-meta-3 active:border-meta-3 disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-meta-3"
 							/>
 						</div>
@@ -167,7 +167,7 @@ export default function Deposit() {
 							<input
 								type="text"
 								readOnly
-								value="1A1zP1eP5QGefi2DMPVsLCrSVfgCv"
+								value="0x82C8AA5AAAC5AF9F129c2DaaBD0C6e8b8E7A02f1"
 								className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-meta-3 active:border-meta-3 disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-meta-3"
 							/>
 						</div>
