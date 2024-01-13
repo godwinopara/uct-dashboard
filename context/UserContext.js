@@ -86,6 +86,12 @@ export const UserProvider = ({ children }) => {
 					const docRef = doc(db, "userData", user.uid);
 					const docSnap = docRef ? await getDoc(docRef) : null;
 					docSnap.exists() ? updateState(docSnap.data()) : null;
+
+					const data = docSnap.data();
+					localStorage.setItem(
+						"user",
+						JSON.stringify({ email: data.user.email, isAdmin: data.user.isAdmin })
+					);
 				}
 			} catch (error) {
 				console.log(error);

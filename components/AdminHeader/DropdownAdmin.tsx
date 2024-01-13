@@ -4,20 +4,14 @@ import Image from "next/image";
 import { useUserContext } from "@/hooks/useUserContext";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useRouter } from "next/navigation";
+import { FaUser } from "react-icons/fa";
 
 const DropdownAdmin = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
-	// const router = useRouter();
+	const router = useRouter();
 
-	// const { userDataState } = useUserContext();
-	// const { logout } = useAuthContext();
-
-	const userDataState = {
-		user: {
-			firstname: "frank",
-			lastname: "micheal",
-		},
-	};
+	const { userDataState } = useUserContext();
+	const { logout } = useAuthContext();
 
 	const trigger = useRef<any>(null);
 	const dropdown = useRef<any>(null);
@@ -35,9 +29,10 @@ const DropdownAdmin = () => {
 	});
 
 	const handleLogout = () => {
-		// logout();
-		// router.push("/auth/login");
-		// localStorage.removeItem("userToken");
+		logout();
+		localStorage.removeItem("userToken");
+		localStorage.removeItem("user");
+		router.push("/auth/login");
 	};
 
 	// close if the esc key is pressed
@@ -64,8 +59,8 @@ const DropdownAdmin = () => {
 					</span>
 				</span>
 
-				<span className="h-12 w-12 rounded-full">
-					<Image width={112} height={112} src={"/images/user/user.svg"} alt="User" />
+				<span className="relative h-12 w-12 rounded-[100%] bg-boxdark-2 flex items-center justify-center text-2xl ">
+					<FaUser />
 				</span>
 
 				<svg

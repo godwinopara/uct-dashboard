@@ -11,6 +11,8 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/config/firebase";
 import { FaUser } from "react-icons/fa";
 import loader from "@/public/images/icon/spinner.svg";
+import { updatePassword } from "firebase/auth";
+import { auth } from "@/config/firebase";
 
 const metadata: Metadata = {
 	title: "User Settings | Universal Cryptosphere Trade Dashboard",
@@ -27,6 +29,11 @@ const Settings = () => {
 		lastname: "",
 		mobile: "",
 		country: "",
+	});
+
+	const [resetPassword, setResetPassword] = useState({
+		password: "",
+		confirmPassword: "",
 	});
 
 	const { userDataState, updateUser } = useUserContext();
@@ -101,6 +108,29 @@ const Settings = () => {
 					secondary: "#FFFF",
 				},
 			});
+		}
+	};
+
+	const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+
+		setResetPassword((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	};
+
+	const handleChangePassword = async () => {
+		if (resetPassword.password !== resetPassword.confirmPassword) {
+			return;
+		}
+		try {
+			const user = auth.currentUser;
+			if (user) {
+				await updatePassword(user, resetPassword.password);
+			}
+		} catch (error: any) {
+			console.error("Error updating password:", error.message);
 		}
 	};
 
@@ -431,6 +461,64 @@ const Settings = () => {
 												Save
 											</button>
 										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className="grid grid-cols-5 gap-8 mt-10">
+					<div className="col-span-5 xl:col-span-3">
+						<div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+							<div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+								<h3 className="font-medium text-black dark:text-white">Update Password</h3>
+							</div>
+							<div className="p-7">
+								<form onSubmit={handleChangePassword}>
+									<div className="mb-5.5 flex flex-col gap-5.5 ">
+										<div className="mb-5.5">
+											<label
+												className="mb-3 block text-sm font-medium text-black dark:text-white"
+												htmlFor="Username"
+											>
+												Password
+											</label>
+											<input
+												className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-meta3text-meta-3 focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-meta3text-meta-3"
+												type="text"
+												name="password"
+												onChange={handlePasswordChange}
+												value={resetPassword.password}
+												placeholder="Password"
+											/>
+										</div>
+
+										<div className="mb-5.5">
+											<label
+												className="mb-3 block text-sm font-medium text-black dark:text-white"
+												htmlFor="Username"
+											>
+												Confirm Password
+											</label>
+											<input
+												className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-meta3text-meta-3 focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-meta3text-meta-3"
+												type="text"
+												name="confirmPassword"
+												onChange={handlePasswordChange}
+												value={resetPassword.confirmPassword}
+												placeholder="Confirm Password"
+											/>
+										</div>
+									</div>
+
+									<div className="flex gap-4.5">
+										<button
+											className="flex justify-center rounded border-meta-3 border  text-meta-3 py-2 px-6 font-medium  hover:bg-opacity-95"
+											type="submit"
+										>
+											Change Password
+										</button>
 									</div>
 								</form>
 							</div>

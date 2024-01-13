@@ -22,10 +22,6 @@ export default function Admin() {
 		});
 	});
 
-	// usersData.forEach((data: any) => {
-
-	// });
-
 	return (
 		<section className="grid gap-y-8 xl:gap-y-0 xl:grid-cols-3  xl:gap-x-5">
 			<DashboardCard img={<FaUsers />} title="Active Users" total={usersData.length} />

@@ -64,26 +64,6 @@ export default function Users() {
 	const handleDeleteUser = (userId: string) => {
 		setShowDeleteUserModal(true);
 		setCurrentUserId(userId);
-
-		console.log(userId, "===userid");
-
-		// if (!window.confirm(`Are you sure to delete this account?`)) return;
-		// if (userId) {
-		// 	deleteUser(userId);
-		// 	toast.success(`User was deleted successfully`, {
-		// 		duration: 6000,
-		// 		position: "top-center",
-		// 		style: {
-		// 			padding: "16px",
-		// 			fontWeight: "bold",
-		// 			minWidth: "300px",
-		// 		},
-		// 		iconTheme: {
-		// 			primary: "#10B981",
-		// 			secondary: "#FFFF",
-		// 		},
-		// 	});
-		// }
 	};
 
 	const handleAllowDeleteUser = () => {

@@ -13,6 +13,8 @@ import { useRouter } from "next/navigation";
 const Login = () => {
 	const [formData, setFormData] = useState({ email: "", password: "" });
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+
 	const router = useRouter();
 
 	const { login, signInWithGoogle } = useAuthContext();
@@ -35,8 +37,11 @@ const Login = () => {
 				localStorage.setItem("userToken", JSON.stringify(userIsValid.user.stsTokenManager));
 				router.push("/user");
 			}
-		} catch (error) {
-			console.log(error);
+		} catch (error: any) {
+			const errorMessage = error.message.replace("Firebase: ", "");
+			if (errorMessage === "Error (auth/invalid-credential).")
+				setError("Invalid Email or Password");
+			setLoading(false);
 		}
 	};
 
@@ -83,6 +88,12 @@ const Login = () => {
 								Sign In
 							</h2>
 							<p className="text-center opacity-40 font-bold">Universal Cryptosphere Trade</p>
+
+							{error && (
+								<div className="border border-red-600 text-center p-3 my-5">
+									<p className="text-red-600">{error}</p>
+								</div>
+							)}
 							<form onSubmit={handleSubmitLogin}>
 								<div className="mb-4">
 									<label className="mb-2.5 block font-medium text-black dark:text-white">
