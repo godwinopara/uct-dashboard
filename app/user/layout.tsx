@@ -13,6 +13,7 @@ import { AppProvider } from "@/context/AppContext";
 import { UserProvider } from "@/context/UserContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import Script from "next/script";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -88,6 +89,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 						</UserProvider>
 					</AuthProvider>
 				</AppProvider>
+				<Script src="//code.tidio.co/qexf9v18mxrecrfy0fpcbxh42i89ldkl.js" async />
 			</body>
 		</html>
 	);
