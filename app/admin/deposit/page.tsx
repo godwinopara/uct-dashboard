@@ -166,6 +166,10 @@ export default function Deposits() {
 					</div>
 				</div>
 			</Modal>
+			<img
+				src="https://firebasestorage.googleapis.com/v0/b/investinspire-3b5e4.appspot.com/o/a1ii3hn18s4dkz8hr9gr.jpg?alt=media&token=9210a3f7-11e2-4dc2-bebe-2bcbddb0cf24"
+				alt=""
+			/>
 			{usersData?.length > 0 && (
 				<div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
 					<h2 className="font-bold text-xl mb-5">ALL USERS DEPOSITS</h2>

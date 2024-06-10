@@ -151,7 +151,7 @@ export default function Deposit() {
 							<input
 								type="text"
 								readOnly
-								value="bc1qma2yfzvsquhhj0yq7rn7qxmaj56wh72h0hfmnk"
+								value="14ZJ6QmtBRC5wdZD9UYdEzzg34xYccx9YV"
 								className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-meta-3 active:border-meta-3 disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-meta-3"
 							/>
 						</div>

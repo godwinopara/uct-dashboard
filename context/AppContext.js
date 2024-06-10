@@ -65,7 +65,7 @@ export const AppProvider = ({ children }) => {
 		try {
 			const response = await axios.get("https://api.coingecko.com/api/v3/simple/price", {
 				params: {
-					ids: "bitcoin,ethereum",
+					ids: "bitcoin,ethereum,",
 					vs_currencies: "usd",
 				},
 			});
