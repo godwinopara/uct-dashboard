@@ -3,6 +3,7 @@
 import { db } from "@/config/firebase";
 import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { createContext, useEffect, useReducer, useState } from "react";
+import toast from "react-hot-toast";
 
 export const AdminContext = createContext();
 
@@ -16,6 +17,7 @@ const adminReducer = (state, action) => {
 
 export const AdminProvider = ({ children }) => {
 	const [usersData, dispatch] = useReducer(adminReducer, []);
+	const [adminData, setAdminData] = useState({})
 	const [refresh, setRefresh] = useState(0);
 
 	const fetchAllData = async () => {
@@ -28,8 +30,16 @@ export const AdminProvider = ({ children }) => {
 		dispatch({ type: "UPDATE_STATE", payload: data });
 	};
 
+	
+	const fetchAdminData = async () => {
+		const userDocRef = doc(db, "admin", "bCnovolRn7fflfUdHxKyO8sGf9I3");
+		const userDocSnap = await getDoc(userDocRef);
+		setAdminData(userDocSnap.data())
+	}
+
 	useEffect(() => {
 		fetchAllData();
+		fetchAdminData()
 	}, [refresh]);
 
 	const updateUserData = async (userId, userInput) => {
@@ -140,6 +150,34 @@ export const AdminProvider = ({ children }) => {
 		setRefresh((prev) => prev + 1);
 	};
 
+	//Update Admin payment method
+
+	
+
+	const updateAdminPaymentOption = async (payload) => {
+		if (payload) {
+		  
+		  try {
+			const userRef = doc(db, "admin", "bCnovolRn7fflfUdHxKyO8sGf9I3");
+			await toast.promise(updateDoc(userRef, { ...payload }), {
+			  loading: "Updating Payment Method...",
+			  success: "Payment Method Updated Successfully",
+			  error: "Error Occurred, Try Again",
+			  
+			}, {
+				position: "top-right"
+			});
+
+			setRefresh((prev) => prev + 1);
+
+		  } catch (error) {
+			console.log(error);
+		  }
+		}
+	  };
+
+
+
 	const deleteUser = async (userId) => {
 		const docRef = doc(db, "userData", userId);
 		await deleteDoc(docRef);
@@ -191,6 +229,8 @@ export const AdminProvider = ({ children }) => {
 		<AdminContext.Provider
 			value={{
 				usersData,
+				adminData,
+				updateAdminPaymentOption,
 				updateUserData,
 				updateBalance,
 				updateTrade,

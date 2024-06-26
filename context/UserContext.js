@@ -9,6 +9,7 @@ import { collection, doc, setDoc, getDoc, getDocs } from "firebase/firestore";
 export const UserContext = createContext();
 
 // Create a reducer function to handle state changes
+
 const userReducer = (state, action) => {
 	switch (action.type) {
 		case "UPDATE_TRADING_SESSION":
@@ -75,19 +76,23 @@ async function saveToFirebase(data, user) {
 
 export const UserProvider = ({ children }) => {
 	const [userDataState, dispatch] = useReducer(userReducer, {});
+	const [admin, setAdmin] = useState(null)
 	const { user } = useAuthContext();
 
-	const router = useRouter();
 
 	useEffect(() => {
 		const getData = async () => {
 			try {
 				if (user) {
 					const docRef = doc(db, "userData", user.uid);
+					const adminRef = doc(db, "admin", "bCnovolRn7fflfUdHxKyO8sGf9I3");
 					const docSnap = docRef ? await getDoc(docRef) : null;
+					const adminSnap = docRef ? await getDoc(adminRef) : null;
+					adminSnap.exists() ? setAdmin(adminSnap.data()): null
 					docSnap.exists() ? updateState(docSnap.data()) : null;
 
 					const data = docSnap.data();
+				
 					localStorage.setItem(
 						"user",
 						JSON.stringify({ email: data.user.email, isAdmin: data.user.isAdmin })
@@ -98,6 +103,7 @@ export const UserProvider = ({ children }) => {
 			}
 		};
 		getData();
+
 	}, [user]);
 
 	const updateTradingSession = (payload) => {
@@ -132,13 +138,16 @@ export const UserProvider = ({ children }) => {
 		<UserContext.Provider
 			value={{
 				userDataState,
+				admin,
 				updateUser,
 				updateTradingSession,
 				updateDepositHistory,
 				updateWithdrawalHistory,
 				updateSubscription,
 				updateVerification,
+			
 			}}
+
 		>
 			{children}
 		</UserContext.Provider>
