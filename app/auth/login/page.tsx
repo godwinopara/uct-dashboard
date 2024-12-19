@@ -29,9 +29,12 @@ const Login = () => {
 
 	const handleSubmitLogin = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setLoading(true);
-		try {
+		// setLoading(true);
+
+		 try {
 			const userIsValid = await login(formData.email, formData.password);
+
+			
 			if (userIsValid) {
 				setLoading(false);
 				localStorage.setItem("userToken", JSON.stringify(userIsValid.user.stsTokenManager));

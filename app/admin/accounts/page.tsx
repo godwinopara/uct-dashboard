@@ -166,29 +166,29 @@ export default function Account() {
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<h5 className="font-medium text-black dark:text-white">
-												{userItem.user.firstname} {userItem.user.lastname}
+												{userItem.user && userItem.user.firstname} {userItem.user && userItem.user.lastname}
 											</h5>
 										</td>
 
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p className="text-black dark:text-white">${userItem.totalBalance}</p>
+											<p className="text-black dark:text-white">${userItem.user && userItem.totalBalance}</p>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p className="text-black dark:text-white">${userItem.totalProfit}</p>
+											<p className="text-black dark:text-white">${userItem.user && userItem.totalProfit}</p>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p className="text-black dark:text-white">${userItem.totalBonus}</p>
+											<p className="text-black dark:text-white">${userItem.user && userItem.totalBonus}</p>
 										</td>
 
 										<td className="border-b border-[#eee] py-5 px-4 flex items-center gap-x-2 dark:border-strokedark">
 											<UploadButton3
 												approveBtnClick={handleClickToggleModal}
-												userId={userItem.userId}
-												loading={loading[userItem.userId] || false}
+												userId={userItem.user && userItem.userId}
+												loading={loading[userItem.user && userItem.userId] || false}
 												btnText="Update Account"
-												balance={userItem.totalBalance}
-												profit={userItem.totalProfit}
-												bonus={userItem.totalBonus}
+												balance={userItem.user && userItem.totalBalance}
+												profit={userItem.user && userItem.totalProfit}
+												bonus={userItem.user && userItem.totalBonus}
 											/>
 										</td>
 									</tr>

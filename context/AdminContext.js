@@ -1,7 +1,7 @@
 "use client";
 
 import { db } from "@/config/firebase";
-import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
 import { createContext, useEffect, useReducer, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -20,15 +20,17 @@ export const AdminProvider = ({ children }) => {
 	const [adminData, setAdminData] = useState({})
 	const [refresh, setRefresh] = useState(0);
 
-	const fetchAllData = async () => {
-		const querySnapshot = await getDocs(collection(db, "userData"));
-		const data = [];
-		querySnapshot.forEach((doc) => {
-			data.push(doc.data());
-		});
 
-		dispatch({ type: "UPDATE_STATE", payload: data });
+	const fetchAllData = async () => {
+		try {
+			const querySnapshot = await getDocs(collection(db, "userData"));
+			const data = querySnapshot.docs.map(doc => doc.data());  // Directly mapping to the array
+			dispatch({ type: "UPDATE_STATE", payload: data });
+		} catch (error) {
+			console.error("Error fetching data from Firebase: ", error);
+		}
 	};
+	
 
 	
 	const fetchAdminData = async () => {

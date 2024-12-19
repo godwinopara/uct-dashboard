@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	const router = useRouter();
 
 	useEffect(() => {
-		setTimeout(() => setLoading(false), 1000);
+		setLoading(false)
 	}, []);
 
 	useEffect(() => {

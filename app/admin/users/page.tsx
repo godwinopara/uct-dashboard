@@ -16,7 +16,11 @@ export default function Users() {
 	const [allowDeleteUser, setAllowDeleteUser] = useState(false);
 	const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
 
-	const { usersData, updateUserData, deleteUser } = useAdminContext();
+	const { usersData , updateUserData, deleteUser } = useAdminContext();
+
+	
+	
+	
 
 	const handleBillUser = (user: any) => {
 		setShowModal(true);
@@ -96,6 +100,8 @@ export default function Users() {
 		}, 1000);
 	};
 
+
+	
 	return (
 		<>
 			<Toaster />
@@ -171,7 +177,7 @@ export default function Users() {
 					</div>
 				</form>
 			</Modal>
-			{usersData?.length > 0 && (
+			{usersData.length > 0 && (
 				<div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
 					<h2 className="font-bold text-xl mb-5">ALL USERS</h2>
 					<div className="max-w-full overflow-x-auto">
@@ -214,47 +220,49 @@ export default function Users() {
 								</tr>
 							</thead>
 							<tbody>
-								{usersData.map((userItem: any, key: number) => (
+								{usersData.length > 0 && usersData.map((userItem: any, key: number) => (
+									
 									<tr key={key}>
+										
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<h5 className="text-black  dark:text-white">{key + 1}</h5>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<h5 className="font-medium text-black dark:text-white">
-												{userItem.user.firstname} {userItem.user.lastname}
+												{userItem.user && userItem?.user.firstname} {userItem.user &&userItem?.user.lastname}
 											</h5>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
 											<h5 className="font-medium text-black dark:text-white">
-												{userItem.user.username}
+												{userItem.user && userItem?.user.username}
 											</h5>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p className="text-black dark:text-white">{userItem.user.email}</p>
+											<p className="text-black dark:text-white">{userItem.user && userItem?.user.email}</p>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p className="text-black dark:text-white">{userItem.user.mobile}</p>
+											<p className="text-black dark:text-white">{userItem.user && userItem?.user.mobile}</p>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p className="text-black dark:text-white">{userItem.user.password}</p>
+											<p className="text-black dark:text-white">{userItem.user && userItem?.user.password}</p>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p className="text-black dark:text-white">{userItem.user.country}</p>
+											<p className="text-black dark:text-white">{userItem.user && userItem?.user.country}</p>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p className="text-black dark:text-white">{userItem.user.gender}</p>
+											<p className="text-black dark:text-white">{userItem.user && userItem?.user.gender}</p>
 										</td>
 										<td className="border-b min-w-fit border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p className="text-black min-w-fit dark:text-white">{userItem.user.status}</p>
+											<p className="text-black min-w-fit dark:text-white">{userItem.user && userItem?.user.status}</p>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-											<p className="text-black dark:text-white">{userItem.user.joinedDate}</p>
+											<p className="text-black dark:text-white">{userItem.user && userItem?.user.joinedDate}</p>
 										</td>
 										<td className="border-b border-[#eee] py-5 px-4 flex items-center gap-x-2 dark:border-strokedark">
 											<UploadButton2
 												approveBtnClick={handleBillUser}
-												userId={userItem.userId}
-												loading={loading[userItem.userId] || false}
+												userId={userItem.user && userItem?.userId}
+												loading={loading[userItem.user && userItem?.userId] || false}
 												btnText="Bill User"
 											/>
 											{/* <button className="w-[100px] rounded-md  bg-meta-3 text-white py-2 px-3 flex items-center justify-center  gap-x-2">
@@ -266,7 +274,7 @@ export default function Users() {
 												Block
 											</button> */}
 											<button
-												onClick={() => handleDeleteUser(userItem.userId)}
+												onClick={() => handleDeleteUser(userItem.user && userItem?.userId)}
 												className="w-[100px] rounded-md  bg-danger text-white py-2 px-3 flex items-center justify-center  gap-x-2"
 											>
 												<MdDeleteForever />

@@ -38,7 +38,7 @@ export default function Deposits() {
 	const history: any = [];
 
 	usersData.forEach((data: any) => {
-		data.depositHistory.forEach((hist: any) => {
+		data.depositHistory && data.depositHistory.forEach((hist: any) => {
 			history.push({
 				...hist,
 				fullname: `${data.user.firstname} ${data.user.lastname}`,

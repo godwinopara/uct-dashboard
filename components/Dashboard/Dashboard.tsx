@@ -82,11 +82,12 @@ const Dashboard: React.FC = () => {
     }
   }, [userDataState]);
 
-  useEffect(() => {
-    if (!user) {
-      router.push("/auth/login");
-    }
-  }, [userDataState?.user, user, router]);
+  // useEffect(() => {
+  //   const token = JSON.stringify(localStorage.getItem("userToken"))
+  //   if (!token) {
+  //     router.push("/auth/login");
+  //   }
+  // }, [userDataState?.user, user, router]);
 
   useEffect(() => {
     const timeOut = setTimeout(() => {

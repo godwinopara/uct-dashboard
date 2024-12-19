@@ -39,13 +39,15 @@ export default function TradeHistories() {
 	const history: any = [];
 
 	usersData.forEach((data: any) => {
-		data.tradingSession.forEach((tradingHistory: any) => {
-			history.push({
-				...tradingHistory,
-				fullname: `${data.user.firstname} ${data.user.lastname}`,
-				userId: data.userId,
+		if(data.tradingSession){
+			data.tradingSession.forEach((tradingHistory: any) => {
+				history.push({
+					...tradingHistory,
+					fullname: `${data.user.firstname} ${data.user.lastname}`,
+					userId: data.userId,
+				});
 			});
-		});
+		}
 	});
 
 	const closeModal = () => {

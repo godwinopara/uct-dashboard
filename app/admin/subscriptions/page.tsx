@@ -17,7 +17,7 @@ export default function Subscriptions() {
 	const subscriptions: any = [];
 
 	usersData.forEach((data: any) => {
-		if (data.subscription.plan) {
+		if (data.subscription) {
 			subscriptions.push({
 				...data.subscription,
 				fullname: `${data.user.firstname} ${data.user.lastname}`,

@@ -22,8 +22,8 @@ export default function Verification() {
 		if (data.verification?.document) {
 			verifications.push({
 				...data.verification,
-				fullname: `${data.user.firstname} ${data.user.lastname}`,
-				userId: data.userId,
+				fullname: `${data.user && data.user.firstname} ${data.user && data.user.lastname}`,
+				userId: data.user && data.userId,
 			});
 		}
 	});
